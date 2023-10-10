@@ -66,9 +66,7 @@ function printRow($csvFilePath,$num){
 			//dont think this does anything here
 			$headers = array_shift($csvData);
 			$count=0;
-			 foreach ($csvData as $row) {
-				 echo $row[$num];
-			 }
+			echo($csvData[$num]);
 				
 			}else{echo "file not found";
 			}

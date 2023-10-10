@@ -12,9 +12,6 @@ if (file_exists($csvFile)) {
 	//print_r($csvData);
 	echo ($csvData[$line][0]);
       
-
-		
-        
 		
        
 } else {

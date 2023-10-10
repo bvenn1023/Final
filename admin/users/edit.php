@@ -15,9 +15,8 @@ $name = $_GET["name"];
 
 //deletecsv("../../data/info.csv",$name);
 //createcsv();
-	
-
-echo printrow("../../data.users.csv",$_GET["name"]);
+//print_r($_GET["name"]);
+printrow("../../data.users.csv",$_GET["name"]);
 } else {
     echo '<p>Item not found.</p>';
 }

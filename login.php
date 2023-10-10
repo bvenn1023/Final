@@ -36,6 +36,7 @@ if(count($_POST)>0){
 					echo $_POST['password'];
 	}else echo 'Email and password are missing';
 }
+//if user isAdmin() header admin folder
 if($showForm){
 ?>
 <head>

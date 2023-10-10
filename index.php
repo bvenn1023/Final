@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php require_once('functions.php');
-print_r($_SESSION);
+//print_r($_SESSION);
 if(!isset($_SESSION['email'])) die('This is a private area, you are not allowed here');
 ?>
 <head>
