@@ -2,6 +2,7 @@
 <html lang="en">
 <?php
 echo("test");
+
 require_once('functions.php');
 
 if(isset($_SESSION['email'])) die('You are already sign in, no need to sign in.');

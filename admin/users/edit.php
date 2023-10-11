@@ -10,13 +10,14 @@
 
 <?php
 require "users.php";
+
 if (isset($_GET["name"])) {
 $name = $_GET["name"];
+$data=GetCSVRow("../../data/users.csv",$_GET["name"]+1);
 
-//deletecsv("../../data/info.csv",$name);
-//createcsv();
-//print_r($_GET["name"]);
-printrow("../../data.users.csv",$_GET["name"]);
+	if(isset($_POST["email"])&&isset($_POST["password"])&&isset($_POST["admin"])){
+		editCSVRow("../../data/users.csv",$_GET["name"]+1,$_POST);
+	}
 } else {
     echo '<p>Item not found.</p>';
 }
@@ -24,12 +25,15 @@ printrow("../../data.users.csv",$_GET["name"]);
 ?>
 
     <form method="POST">
-        <label for="year">User Name:</label>
-        <input type="text" id="year" name="year" value="<?phpreadcsv($_GET["name"]["username"])?>"  required><br><br>
+        <label for="email">User Name:</label>
+        <input type="text" id="email" name="email" value="<?php echo $data[0];?>"  required><br><br>
 
         <label for="description">Password:</label><br>
-        <input type="Password" id="password" name="password"  required><br><br>
-
+        <input type="Password" id="password" name="password" value="<?php echo $data[1];?>"  required><br><br>
+		
+		<label for="admin">Admin status: </label>
+		value of 1 means admin, 0 means user
+		<input type="text" id="admin" name="admin" value="<?php echo $data[2];?>"  required><br><br>
         <input type="submit" value="Edit User">
     </form>
 
