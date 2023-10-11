@@ -16,7 +16,7 @@ $name = $_GET["name"];
 $data=GetCSVRow("../../data/users.csv",$_GET["name"]+1);
 
 	if(isset($_POST["email"])&&isset($_POST["password"])&&isset($_POST["admin"])){
-		editCSVRow("../../data/users.csv",$_GET["name"]+1,$_POST);
+		editcsv("../../data/users.csv",$_GET["name"]+1,$_POST);
 	}
 } else {
     echo '<p>Item not found.</p>';

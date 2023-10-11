@@ -72,15 +72,13 @@ function deletecsv($path,$num){
 	
 }
 
-function editCSVRow($csvFilePath, $lineNumber, $postData) {
-    // Read the entire CSV file into an array
+function editcsv($csvFilePath, $lineNumber, $postData) {
     $rows = array_map('str_getcsv', file($csvFilePath));
 
-    // Ensure the line number is valid
+    // check if the line number is valid
     if ($lineNumber >= 1 && $lineNumber <= count($rows)) {
-        // Modify the specific row based on POST input
+        
         $rows[$lineNumber - 1] = $postData;
-
         // Reopen the CSV file for writing
         $file = fopen($csvFilePath, 'w');
 
