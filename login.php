@@ -16,7 +16,7 @@ if(count($_POST)>0){
 			
 			if(strstr($line,'<?php die() ?>') || strlen($line)<5) continue;
 			$index++;
-			$line=explode(';',trim($line));
+			$line=explode(',',trim($line));
 			print_r($index);
 			if($line[0]==$_POST['email'] && $line[1]==$_POST['password']){
 				// Sign the user in
