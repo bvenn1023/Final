@@ -2,6 +2,7 @@
 <html lang="en">
 <?php
 echo("test");
+
 require_once('functions.php');
 
 if(isset($_SESSION['email'])) die('You are already sign in, no need to sign in.');
@@ -16,7 +17,7 @@ if(count($_POST)>0){
 			
 			if(strstr($line,'<?php die() ?>') || strlen($line)<5) continue;
 			$index++;
-			$line=explode(';',trim($line));
+			$line=explode(',',trim($line));
 			print_r($index);
 			if($line[0]==$_POST['email'] && $line[1]==$_POST['password']){
 				// Sign the user in

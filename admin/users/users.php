@@ -32,46 +32,29 @@ function printcsv()
 
 
 
-function countCSVRows($csvFilePath) {
-    if (file_exists($csvFilePath)) {
-        $rowCount = 0;
+
+
+
+
+function getCSVRow($csvFilePath, $lineNumber) {
+    if (($handle = fopen($csvFilePath, "r")) !== FALSE) {
+        $rowNumber = 0;
         
-        if (($fp = fopen($csvFilePath, "r")) !== false) {
-            // Loop through the file and count the rows
-            while (($data = fgetcsv($fp)) !== false) {
-                $rowCount++;
-				
-            }
+        while (($data = fgetcsv($handle, 0, ',')) !== FALSE) {
+            $rowNumber++;
             
-            fclose($fp);
-        } else {
-            // Unable to open the CSV file
-            return false;
+            if ($rowNumber == $lineNumber) {
+                fclose($handle);
+                return $data; // Return the row as an array
+            }
         }
         
-        return $rowCount;
-    } else {
-        // CSV file does not exist
-        return false;
+        fclose($handle);
     }
+
+    return null; // Row not found or file couldn't be opened
 }
 
-
-
-function printRow($csvFilePath,$num){
-	
-	 if (file_exists($csvFilePath)) {
-		if (($fp = fopen($csvFilePath, "r")) !== false) {
-			 $csvData = array_map('str_getcsv', file($csvFile));
-			//dont think this does anything here
-			$headers = array_shift($csvData);
-			$count=0;
-			echo($csvData[$num]);
-				
-			}else{echo "file not found";
-			}
-	 }
-}
 	
 	
 
@@ -87,5 +70,28 @@ function deletecsv($path,$num){
 	}
 	
 	
+}
+
+function editcsv($csvFilePath, $lineNumber, $postData) {
+    $rows = array_map('str_getcsv', file($csvFilePath));
+
+    // check if the line number is valid
+    if ($lineNumber >= 1 && $lineNumber <= count($rows)) {
+        
+        $rows[$lineNumber - 1] = $postData;
+        // Reopen the CSV file for writing
+        $file = fopen($csvFilePath, 'w');
+
+        // Write the updated data back to the CSV file
+        foreach ($rows as $row) {
+            fputcsv($file, $row);
+        }
+
+        fclose($file);
+
+        return true; // Edit successful
+    } else {
+        return false; // Invalid line number
+    }
 }
 ?>
