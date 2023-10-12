@@ -2,7 +2,26 @@
 <html lang="en">
 
 <?php
-require 'lib/convertJson.php';
+session_start(); // Start or resume the session
+
+function getUserWorkoutData($userId)
+{
+    $userWorkoutDirectory = 'lib/';
+
+    $filePath = $userWorkoutDirectory . $userId . '.json';
+
+    if (file_exists($filePath)) {
+        $jsonData = file_get_contents($filePath);
+    } else {
+        $jsonData = '[]';
+        file_put_contents($filePath, $jsonData);
+    }
+    $data = json_decode($jsonData, true);
+
+    return $data;
+}
+$loggedInUserId = $_SESSION['email']; // Replace with your session variable
+$userWorkoutData = getUserWorkoutData($loggedInUserId);
 
 ?>
 
@@ -37,7 +56,7 @@ require 'lib/convertJson.php';
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -49,7 +68,7 @@ require 'lib/convertJson.php';
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="index.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -111,7 +130,7 @@ require 'lib/convertJson.php';
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Login Screens:</h6>
-                        <a class="collapse-item" href="login.html">Login</a>
+                        <a class="collapse-item" href="login.php">Login</a>
                         <a class="collapse-item" href="register.html">Register</a>
                         <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
                         <div class="collapse-divider"></div>
@@ -347,7 +366,7 @@ require 'lib/convertJson.php';
 
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">Tables</h1>
-                        <!-- DataTales Example -->
+                    <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
@@ -358,23 +377,28 @@ require 'lib/convertJson.php';
                                     <thead>
                                         <tr>
                                             <th>Workout Name</th>
-                                            <th>Excersises</th>
+                                            <th>Exercises</th>
                                             <th>Calorie Burn Goal</th>
                                             <th>Calories Burned</th>
-                                            <th>Time Worked Out</th>
+                                            <th>Time Worked Out (Minutes)</th>
                                         </tr>
                                     </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Wokout Name</th>
-                                            <th>Excersises</th>
-                                            <th>Calorie Burn Goal</th>
-                                            <th>Calories Burned</th>
-                                            <th>Time Worked Out</th>
-                                        </tr>
-                                    </tfoot>
                                     <tbody>
-                                        <th><?php printWorkoutData('data/workoutData.json'); ?> </th>
+                                        <?php
+                                        if ($userWorkoutData !== null) {
+                                            foreach ($userWorkoutData as $workout) {
+                                                echo '<tr>';
+                                                echo '<th>' . $workout['WorkoutName'] . '</th>';
+                                                echo '<th>' . $workout['Exercises'] . '</th>';
+                                                echo '<th>' . $workout['CalorieBurnGoal'] . '</th>';
+                                                echo '<th>' . $workout['CaloriesBurned'] . '</th>';
+                                                echo '<th>' . $workout['TimeWorkedOut'] . '</th>';
+                                                echo '</tr>';
+                                            }
+                                        }
+                                        ?>
+                                    <tbody>
+                                        <a href="lib/edit.php">Edit Workout</a>
                                     </tbody>
                                 </table>
                             </div>
@@ -421,7 +445,7 @@ require 'lib/convertJson.php';
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <a class="btn btn-primary" href="login.php">Logout</a>
                 </div>
             </div>
         </div>
