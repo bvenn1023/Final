@@ -1,23 +1,25 @@
 <?php
-function printWorkoutData($jsonFilePath)
-{
-    // Read JSON data from the file
-    $jsonData = file_get_contents($jsonFilePath);
+session_start(); // Start or resume the session
+
+function getUserWorkoutData($userId) {
+    // Define the directory where user files are stored
+
+    // Create a file path for the user's data
+    $filePath = $userId . '.json';
+
+    if (file_exists($filePath)) {
+        // File exists, so read and return its content
+        $jsonData = file_get_contents($filePath);
+    } else {
+        // File doesn't exist, so create an empty array
+        $jsonData = '[]';
+        // Create an empty JSON file for the user
+        file_put_contents($filePath, $jsonData);
+    }
 
     // Decode JSON data
     $data = json_decode($jsonData, true);
 
-    // Check if data is an array
-    if (is_array($data)) {
-        foreach ($data as $workout) {
-            echo '<tr>';
-            echo '<td>' . $workout['WorkoutName'] . '</td>';
-            echo '<td>' . $workout['Exercises'] . '</td>';
-            echo '<td>' . $workout['CalorieBurnGoal'] . '</td>';
-            echo '<td>' . $workout['CaloriesBurned'] . '</td>';
-            echo '<td>' . $workout['TimeWorkedOut'] . '</td>';
-            echo '</tr>';
-        }
-    }
+    return $data;
 }
 
