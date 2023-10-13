@@ -2,13 +2,11 @@
 <html lang="en">
 
 <?php
-session_start(); // Start or resume the session
+session_start();
 
 function getUserWorkoutData($userId)
 {
-    $userWorkoutDirectory = 'lib/';
-
-    $filePath = $userWorkoutDirectory . $userId . '.json';
+    $filePath = 'lib/' . $userId . '.json';
 
     if (file_exists($filePath)) {
         $jsonData = file_get_contents($filePath);
@@ -16,12 +14,13 @@ function getUserWorkoutData($userId)
         $jsonData = '[]';
         file_put_contents($filePath, $jsonData);
     }
+
     $data = json_decode($jsonData, true);
 
     return $data;
 }
-$loggedInUserId = $_SESSION['email']; // Replace with your session variable
-$userWorkoutData = getUserWorkoutData($loggedInUserId);
+$userId = $_SESSION['email'];
+$userWorkoutData = getUserWorkoutData($userId);
 
 ?>
 
@@ -384,19 +383,15 @@ $userWorkoutData = getUserWorkoutData($loggedInUserId);
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php
-                                        if ($userWorkoutData !== null) {
-                                            foreach ($userWorkoutData as $workout) {
-                                                echo '<tr>';
-                                                echo '<th>' . $workout['WorkoutName'] . '</th>';
-                                                echo '<th>' . $workout['Exercises'] . '</th>';
-                                                echo '<th>' . $workout['CalorieBurnGoal'] . '</th>';
-                                                echo '<th>' . $workout['CaloriesBurned'] . '</th>';
-                                                echo '<th>' . $workout['TimeWorkedOut'] . '</th>';
-                                                echo '</tr>';
-                                            }
-                                        }
-                                        ?>
+                                        <?php foreach ($userWorkoutData as $workout) : ?>
+                                            <tr>
+                                                <td><?php echo $workout['WorkoutName']; ?></td>
+                                                <td><?php echo $workout['Exercises']; ?></td>
+                                                <td><?php echo $workout['CalorieBurnGoal']; ?></td>
+                                                <td><?php echo $workout['CaloriesBurned']; ?></td>
+                                                <td><?php echo $workout['TimeWorkedOut']; ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
                                     <tbody>
                                         <a href="lib/edit.php">Edit Workout</a>
                                     </tbody>
