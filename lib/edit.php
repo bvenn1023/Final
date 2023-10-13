@@ -1,5 +1,7 @@
 <?php
-session_start(); 
+session_start();
+
+$userId = $_SESSION['email'];
 
 function getUserWorkoutData($userId)
 {
@@ -40,7 +42,26 @@ function saveUserWorkoutData($userId, $data)
     file_put_contents($filePath, $jsonData);
 }
 
-$userId = $_SESSION['email']; 
+function deleteUserWorkoutData($userId, $index)
+{
+    $filePath = 'lib/' . $userId . '.json';
+    $jsonData = file_get_contents($filePath);
+    $data = json_decode($jsonData, true);
+
+    if (isset($data[$index])) {
+        array_splice($data, $index, 1);
+    }
+
+    file_put_contents($filePath, json_encode($data, JSON_PRETTY_PRINT));
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_index'])) {
+    $deleteIndex = $_POST['delete_index'];
+    deleteUserWorkoutData($userId, $deleteIndex);
+    $message = "Workout data deleted successfully.";
+}
+
+
 $userWorkoutData = getUserWorkoutData($userId);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -99,8 +120,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <label for="timeWorkedOut">Time Worked Out (minutes):</label>
                         <input type="number" name="timeWorkedOut" value="<?php echo $workout['TimeWorkedOut']; ?>" required><br>
 
-                        <button type="submit">Save</button>
+                        <button type="submit">Save</button><br>
+
                     </form>
+                    <form method='post' action='delete.php'>
+                        <input type='hidden' name='delete_index' value='{$index}'>
+                        <button type='submit'>Delete</button>
+                        </form>
                 </li>
             <?php endforeach; ?>
         <?php else : ?>
