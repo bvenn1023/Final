@@ -1,0 +1,9 @@
+[
+    {
+        "WorkoutName": "cardio",
+        "Exercises": "stationary cycle",
+        "CalorieBurnGoal": "300",
+        "CaloriesBurned": "200",
+        "TimeWorkedOut": "90"
+    }
+]
