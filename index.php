@@ -360,7 +360,9 @@ if (isset ($_POST["logout"])){
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
+                                <form method="POST">
+									<input type="submit" name="logout" value="logout">
+								</form>
                                 </a>
                             </div>
                         </li>

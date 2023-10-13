@@ -4,6 +4,7 @@
 echo("test");
 
 require_once('functions.php');
+require "admin/users/users.php";
 
 if(isset($_SESSION['email'])) die('You are already sign in, no need to sign in.');
 $showForm=true;
@@ -18,7 +19,9 @@ if(count($_POST)>0){
 			if(strstr($line,'<?php die() ?>') || strlen($line)<5) continue;
 			$index++;
 			$line=explode(',',trim($line));
-			print_r($index);
+			
+		
+			
 			if($line[0]==$_POST['email'] && $line[1]==$_POST['password']){
 				// Sign the user in
 				//1. Save the user's data into the session
@@ -27,14 +30,18 @@ if(count($_POST)>0){
 				header("Location: index.php");
 				//2. Show a welcome message
 				echo 'Welcome to our website';$showForm=false;
+				if($line[2]==1){
+					header("Location: admin/users/index.php");
+					
+				}
 			}
 		}
 		fclose($fp);
 		// The credentials are wrong
 		if($showForm) echo 'Your credentials are wrong';
-					print_r($line);
-					echo $_POST['email'];
-					echo $_POST['password'];
+					//print_r($line);
+					//echo $_POST['email'];
+					//echo $_POST['password'];
 	}else echo 'Email and password are missing';
 }
 //if user isAdmin() header admin folder

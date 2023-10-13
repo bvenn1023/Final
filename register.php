@@ -10,7 +10,7 @@ function createcsv(){
         } else {
             $csvFile = 'data/users.csv';
 			$fp=fopen($csvFile,"a");
-		
+			$admin=0;
 			$list=array(
 			array($name,$password,$admin),
 			
