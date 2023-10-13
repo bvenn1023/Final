@@ -2,8 +2,17 @@
 <html lang="en">
 
 <?php require_once('functions.php');
-print_r($_SESSION);
+
 if (!isset($_SESSION['email'])) die('This is a private area, you are not allowed here');
+
+
+if (isset ($_POST["logout"])){
+	session_unset();
+	session_destroy();
+	header("Location: login.php");
+	exit;
+}
+
 ?>
 
 
@@ -362,8 +371,8 @@ if (!isset($_SESSION['email'])) die('This is a private area, you are not allowed
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Earnings (Monthly)</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                                Total Workouts</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php countArraysInJsonFile("lib/".$_SESSION['email'].".json")?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -380,8 +389,8 @@ if (!isset($_SESSION['email'])) die('This is a private area, you are not allowed
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Earnings (Annual)</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+                                                Total Calories Burned</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php totalCalories("lib/".$_SESSION['email'].".json")?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -397,17 +406,13 @@ if (!isset($_SESSION['email'])) die('This is a private area, you are not allowed
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total Minutes
                                             </div>
                                             <div class="row no-gutters align-items-center">
                                                 <div class="col-auto">
-                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
+                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?php totalTimeSpent("lib/".$_SESSION['email'].".json")?></div>
                                                 </div>
-                                                <div class="col">
-                                                    <div class="progress progress-sm mr-2">
-                                                        <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
+                                                
                                             </div>
                                         </div>
                                         <div class="col-auto">
@@ -425,8 +430,8 @@ if (!isset($_SESSION['email'])) die('This is a private area, you are not allowed
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                Pending Requests</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                                                Total Burn Goal</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php totalCaloriesGoal("lib/".$_SESSION['email'].".json")?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-comments fa-2x text-gray-300"></i>
