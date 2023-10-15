@@ -31,18 +31,21 @@ if(count($_POST)>0){
 				//2. Show a welcome message
 				echo 'Welcome to our website';$showForm=false;
 				if($line[2]==1){
-					header("Location: admin/users/index.php");
+					$_SESSION['admin']=true;
+					header("Location: admin/index.php");
 					
-				}
+				}else{
+					$_SESSION['admin']=false;
 			}
+		 }
 		}
 		fclose($fp);
 		// The credentials are wrong
-		if($showForm) echo 'Your credentials are wrong';
+		if($showForm) {echo 'Your credentials are wrong';}
 					//print_r($line);
 					//echo $_POST['email'];
 					//echo $_POST['password'];
-	}else echo 'Email and password are missing';
+		}else echo 'Email and password are missing';
 }
 //if user isAdmin() header admin folder
 if($showForm){
