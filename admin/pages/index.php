@@ -36,5 +36,7 @@
 ?>	
 </table>
 <p><a href="create.php?row=<?php echo $rowcount; ?>">New Item</a></p>
+<hr>
+<a href="../../index.php">back to user view</a>
 </body>
 </html>
