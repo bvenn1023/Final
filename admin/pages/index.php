@@ -1,71 +1,40 @@
-<?php
+<!DOCTYPE html>
+<html>
+<head>
+	<title>index</title>
+</head>
+<body>
 
-function readText($path,$lineNumber)
-{
-	$content = file_get_contents($path);
+<table border="1">
+<?php require "pages.php";
 	
-	if ($content !== false) {
-		$lines = explode("\n", $content);
-		$lineCount = count($lines);
+    if (!is_dir("../..")) {
+        echo "Folder not found";
+        return;
+    }
+
+    // Get all files in the folder with .txt extension
+    $txtFiles = glob("../..". '/*.*');
+
+    // Check if there are any .txt files
+    if (empty($txtFiles)) {
+        echo "No .txt files found in the folder";
+        return;
+    }else{
 		
 		
-		
-		if ($lineNumber >= 1 && $lineNumber <= $lineCount) {
-			$lineContent = $lines[$lineNumber-1];
-			//need a for loop that echos below table as well as content based on line number
+		for($i=0;$i<count($txtFiles);$i++){
+			echo "<tr>";
 			
-			echo $lineContent;
-            
-            
-		} 
-			else {
-				return "Line number out of range";
-			}
-	} 
-		else {
-			return "File not found or unable to read.";
+			echo '<td><a href="detail.php?name=' . urlencode($txtFiles[$i]) . '">' . "view" . '</a></td>';
+			echo "<td>".$txtFiles[$i]."</td>";
+			echo '<td><a href="edit.php?name=' . urlencode($txtFiles[$i]) . '">Edit</a> | <a href="delete.php?name=' . urlencode($txtFiles[$i]) . '">Delete</a></td>';
+			echo "</tr>";
 		}
-}
-
-function deleteText($path){
-	
-	unlink($path);
-}
-
-
-function editText($path){
-	if (isset($_POST['newContent'])) {
-   
-    $newContent = $_POST['newContent'];
-
-    // Check if the file exists
-    if (file_exists($path)) {
-        
-        $file = fopen($path, 'w');
-        
-        // Write the new content to the file
-        if ($file) {
-            fwrite($file, $newContent);
-            fclose($file);
-            echo "File '$path' has been successfully updated.";
-        } else {
-            echo "Unable to open the file for writing.";
-        }
-    } else {
-        echo "File '$filename' does not exist.";
-    }//else randomly executes sometimes?
-} else {
-    echo "Please provide both a filename and new content.";
-}
-	
-	
-}
-function createFile($fileName, $text){
-	$file=fopen($fileName,"w");
-	fwrite($file,$text);
-	fclose($file);
-	header("Location: index.php");
-}
-	
-	
-?>
+		
+	}
+?>	
+</table>
+<p><a href="create.php?row=<?php echo $rowcount; ?>">New Item</a></p>
+</body>
+</html>

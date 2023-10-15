@@ -7,14 +7,14 @@
 
 
 <?php require "pages.php";
-	
+	echo "<xmp>";
 	$lines=file($_GET["name"]);
 	for($i=0;$i<count($lines);$i++){
 		
 	
 		
 		readText($_GET["name"],$i+1); 
-		echo"<br>";
+		//echo"<br>";
 	
 	
 	}
