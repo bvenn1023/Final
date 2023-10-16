@@ -32,6 +32,7 @@ function saveUserWorkoutData($userId, $data)
 
 function deleteUserWorkoutData($userId, $index)
 {
+
     $filePath = $userId . '.json';
     $jsonData = file_get_contents($filePath);
     $data = json_decode($jsonData, true);

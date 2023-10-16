@@ -5,7 +5,7 @@ function getUserWorkoutData($userId) {
     // Define the directory where user files are stored
 
     // Create a file path for the user's data
-    $filePath = $userId . '.json';
+    $filePath = $_SESSION[3] . '.json';
 
     if (file_exists($filePath)) {
         // File exists, so read and return its content
