@@ -1,0 +1,16 @@
+[
+    {
+        "WorkoutName": "cardio",
+        "Exercises": "stationary cycle",
+        "CalorieBurnGoal": "300",
+        "CaloriesBurned": "200",
+        "TimeWorkedOut": "90"
+    },
+    {
+        "WorkoutName": "cardio",
+        "Exercises": "running",
+        "CalorieBurnGoal": "300",
+        "CaloriesBurned": "200",
+        "TimeWorkedOut": "90"
+    }
+]

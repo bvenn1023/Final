@@ -74,32 +74,28 @@ $userWorkoutData = getUserWorkoutData($userId);
 
             <!-- Divider -->
             <hr class="sidebar-divider">
-
-
-
-
-
-
-
+       
+   
             <!-- Nav Item - Pages Collapse Menu -->
             <?php //only executes if user is admin, links to admin features
-            if ($_SESSION['admin'] == true) { ?>
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-                        <i class="fas fa-fw fa-folder"></i>
-                        <span>Pages</span>
-                    </a>
-                    <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                        <div class="bg-white py-2 collapse-inner rounded">
-                            <h6 class="collapse-header">Admin Features:</h6>
-                            <a class="collapse-item" href="admin/users/index.php">Edit Users</a>
-                            <a class="collapse-item" href="admin/pages/index.php">Edit Pages</a>
 
-                        </div>
+			if ($_SESSION['admin']==true){?>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Pages</span>
+                </a>
+                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Admin Features:</h6>
+                        <a class="collapse-item" href="admin/users/index.php">Edit Users</a>
+                        <a class="collapse-item" href="admin/pages/index.php">Edit Pages</a>
+                       
                     </div>
-                </li>
-            <?php } ?>
-
+                </div>
+            </li>
+			<?php }?>
+            
 
             <!-- Nav Item - Tables -->
             <li class="nav-item active">
@@ -134,8 +130,8 @@ $userWorkoutData = getUserWorkoutData($userId);
                             <i class="fa fa-bars"></i>
                         </button>
                     </form>
-
-                    <h2>Gymify Fitness Application</h2>
+						
+					<h2>Gymify Fitness Application</h2>
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
 
@@ -159,22 +155,21 @@ $userWorkoutData = getUserWorkoutData($userId);
                             </div>
                         </li>
 
-
-
-
-
                         <div class="topbar-divider d-none d-sm-block"></div>
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION["email"]; ?></span>
+
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION["email"];?></span>
                                 <form method="POST">
-                                    <input type="submit" name="logout" value="logout">
-                                </form>
+									                  <input type="submit" name="logout" value="logout">
+								                </form>
                             </a>
+                         
 
                         </li>
+                            
 
 
                     </ul>
@@ -212,10 +207,9 @@ $userWorkoutData = getUserWorkoutData($userId);
                                                 <td><?php echo $workout['CaloriesBurned']; ?></td>
                                                 <td><?php echo $workout['TimeWorkedOut']; ?></td>
                                             </tr>
+
                                             <?php $loopIndex++; ?>
                                         <?php endforeach; ?>
-
-
 
                                     <tbody>
                                         <a href="lib/edit.php">Edit Workout</a>

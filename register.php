@@ -1,4 +1,36 @@
 <!DOCTYPE html>
+<?php
+function createcsv(){
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $name = $_POST["email"];
+        $password = $_POST["password"];
+		
+        if (empty($name) || empty($password)) {
+            echo '<p>Please fill in all fields.</p>';
+        } else {
+            $csvFile = 'data/users.csv';
+			$fp=fopen($csvFile,"a");
+			$admin=0;
+			$list=array(
+			array($name,$password,$admin),
+			
+			
+			);
+			//fwrite($fp,"\n");
+			foreach ($list as $fields) {
+				fputcsv($fp, $fields,",");
+				}
+
+			fclose($fp);
+
+  
+            header("Location: login.php");
+            exit;
+        }
+    }
+}
+createcsv();
+?>
 <html lang="en">
 
 <head>
@@ -36,7 +68,7 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                             </div>
-                            <form class="user">
+                            <form class="user" method="POST" action="register.php">
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input type="text" class="form-control form-control-user" id="exampleFirstName"
@@ -48,7 +80,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="email" class="form-control form-control-user" id="exampleInputEmail"
+                                    <input type="email" class="form-control form-control-user" id="exampleInputEmail" name="email"
                                         placeholder="Email Address">
                                 </div>
                                 <div class="form-group row">
@@ -57,27 +89,20 @@
                                             id="exampleInputPassword" placeholder="Password">
                                     </div>
                                     <div class="col-sm-6">
-                                        <input type="password" class="form-control form-control-user"
+                                        <input type="password" class="form-control form-control-user" name="password"
                                             id="exampleRepeatPassword" placeholder="Repeat Password">
                                     </div>
                                 </div>
-                                <a href="login.html" class="btn btn-primary btn-user btn-block">
-                                    Register Account
-                                </a>
-                                <hr>
-                                <a href="index.html" class="btn btn-google btn-user btn-block">
-                                    <i class="fab fa-google fa-fw"></i> Register with Google
-                                </a>
-                                <a href="index.html" class="btn btn-facebook btn-user btn-block">
-                                    <i class="fab fa-facebook-f fa-fw"></i> Register with Facebook
-                                </a>
+                               <button type="submit" >Create Account</button>
+                 
+                                
+                                
                             </form>
                             <hr>
-                            <div class="text-center">
-                                <a class="small" href="forgot-password.html">Forgot Password?</a>
+                         
                             </div>
                             <div class="text-center">
-                                <a class="small" href="login.html">Already have an account? Login!</a>
+                                <a class="small" href="login.php">Already have an account? Login!</a>
                             </div>
                         </div>
                     </div>

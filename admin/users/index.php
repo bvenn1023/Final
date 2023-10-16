@@ -9,3 +9,4 @@
 
 	?>
 </table>
+<a href="../../index.php">back to user view</a>
