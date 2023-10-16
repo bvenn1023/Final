@@ -19,7 +19,7 @@ function getUserWorkoutData($userId)
 
     return $data;
 }
-$userId = $_SESSION['email'];
+$userId = $_SESSION['id'];
 $userWorkoutData = getUserWorkoutData($userId);
 
 ?>
