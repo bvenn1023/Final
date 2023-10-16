@@ -6,7 +6,7 @@ session_start();
 
 function getUserWorkoutData($userId)
 {
-    $filePath = 'lib/' . $userId . '.json';
+    $filePath = 'lib/' . $_SESSION['id'] . '.json';
 
     if (file_exists($filePath)) {
         $jsonData = file_get_contents($filePath);
@@ -19,7 +19,7 @@ function getUserWorkoutData($userId)
 
     return $data;
 }
-$userId = $_SESSION['email'];
+$userId = $_SESSION['id'];
 $userWorkoutData = getUserWorkoutData($userId);
 
 ?>
