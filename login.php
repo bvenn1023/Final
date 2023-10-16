@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-echo("test");
+
 
 require_once('functions.php');
 require "admin/users/users.php";
