@@ -1,49 +1,69 @@
 <?php
-session_start(); // Start or resume the session
+session_start();
 
-// Function to get user-specific workout data
+$userId = $_SESSION['email'];
+
 function getUserWorkoutData($userId)
 {
-    // Define the directory where user files are stored
-    $userWorkoutDirectory = 'lib';
-
-    // Create a file path for the user's data
     $filePath = $userId . '.json';
 
     if (file_exists($filePath)) {
-        // File exists, so read and return its content
         $jsonData = file_get_contents($filePath);
+        if (empty($jsonData)) {
+            $jsonData = promptUserForInput();
+            file_put_contents($filePath, $jsonData);
+        }
     } else {
-        // File doesn't exist, so create an empty array
-        $jsonData = '[]';
-        // Create an empty JSON file for the user
+        $jsonData = promptUserForInput();
         file_put_contents($filePath, $jsonData);
     }
 
-    // Decode JSON data
     $data = json_decode($jsonData, true);
 
     return $data;
 }
 
-// Function to save user-specific workout data
+function promptUserForInput()
+{
+    $workoutData = [];
+    $fields = ['WorkoutName', 'Exercises', 'CalorieBurnGoal', 'CaloriesBurned', 'TimeWorkedOut'];
+
+    foreach ($fields as $field) {
+        $workoutData[$field] = readline("Enter $field: ");
+    }
+
+    return json_encode([$workoutData]);
+}
+
 function saveUserWorkoutData($userId, $data)
 {
-    $userWorkoutDirectory = 'data/';
     $filePath = $userId . '.json';
-
-    // Encode the data to JSON
     $jsonData = json_encode($data, JSON_PRETTY_PRINT);
-
-    // Save the updated data to the JSON file
     file_put_contents($filePath, $jsonData);
 }
 
-// Example of how to use the function to get user-specific workout data
-$loggedInUserId = $_SESSION['email']; // Replace with your session variable
-$userWorkoutData = getUserWorkoutData($loggedInUserId);
+function deleteUserWorkoutData($userId, $index)
+{
+    $filePath = $userId . '.json';
+    $jsonData = file_get_contents($filePath);
+    $data = json_decode($jsonData, true);
 
-// Check if the form is submitted for editing
+    if (isset($data[$index])) {
+        array_splice($data, $index, 1);
+    }
+
+    file_put_contents($filePath, json_encode($data, JSON_PRETTY_PRINT));
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_index'])) {
+    $deleteIndex = $_POST['delete_index'];
+    deleteUserWorkoutData($userId, $deleteIndex);
+    $message = "Workout data deleted successfully.";
+}
+
+
+$userWorkoutData = getUserWorkoutData($userId);
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get input data from the form
     $workoutName = $_POST['workoutName'];
@@ -52,7 +72,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $caloriesBurned = $_POST['caloriesBurned'];
     $timeWorkedOut = $_POST['timeWorkedOut'];
 
-    // Create an associative array for the updated workout data
     $updatedWorkoutData = [
         'WorkoutName' => $workoutName,
         'Exercises' => $exercises,
@@ -61,11 +80,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         'TimeWorkedOut' => $timeWorkedOut,
     ];
 
-    // Append the updated workout data
     $userWorkoutData[] = $updatedWorkoutData;
 
-    // Save the workout data to the user's JSON file
-    saveUserWorkoutData($loggedInUserId, $userWorkoutData);
+    saveUserWorkoutData($userId, $userWorkoutData);
 
     $message = "Workout data saved successfully.";
 }
@@ -81,31 +98,56 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
     <h1>Workout Tracker</h1>
-    <h2>Welcome, <?php echo $loggedInUserId; ?>!</h2>
+    <h2>Welcome, <?php echo $userId; ?>!</h2>
     <h3>Your Workout Data:</h3>
     <ul>
-        <?php foreach ($userWorkoutData as $index => $workout) : ?>
+        <?php if (!empty($userWorkoutData)) : ?>
+            <?php foreach ($userWorkoutData as $index => $workout) : ?>
+                <li>
+                    <form method="post">
+                        <label for="workoutName">Workout Name:</label>
+                        <input type="text" name="workoutName" value="<?php echo $workout['WorkoutName']; ?>" required><br>
+
+                        <label for="exercises">Exercises:</label>
+                        <input type="text" name="exercises" value="<?php echo $workout['Exercises']; ?>" required><br>
+
+                        <label for="calorieBurnGoal">Calorie Burn Goal:</label>
+                        <input type="number" name="calorieBurnGoal" value="<?php echo $workout['CalorieBurnGoal']; ?>" required><br>
+
+                        <label for="caloriesBurned">Calories Burned:</label>
+                        <input type="number" name="caloriesBurned" value="<?php echo $workout['CaloriesBurned']; ?>" required><br>
+
+                        <label for="timeWorkedOut">Time Worked Out (minutes):</label>
+                        <input type="number" name="timeWorkedOut" value="<?php echo $workout['TimeWorkedOut']; ?>" required><br>
+
+                        <button type="submit">Save</button><br>
+                        <input type='hidden' name='delete_index' value='{$index}'>
+                        <button type='submit'>Delete</button>
+                    </form>
+                </li>
+            <?php endforeach; ?>
+        <?php else : ?>
             <li>
                 <form method="post">
                     <label for="workoutName">Workout Name:</label>
-                    <input type="text" name="workoutName" value="<?php echo $workout['WorkoutName']; ?>" required><br>
+                    <input type="text" name="workoutName" required><br>
 
                     <label for="exercises">Exercises:</label>
-                    <input type="text" name="exercises" value="<?php echo $workout['Exercises']; ?>" required><br>
+                    <input type="text" name="exercises" required><br>
 
                     <label for="calorieBurnGoal">Calorie Burn Goal:</label>
-                    <input type="number" name="calorieBurnGoal" value="<?php echo $workout['CalorieBurnGoal']; ?>" required><br>
+                    <input type="number" name="calorieBurnGoal" required><br>
 
                     <label for="caloriesBurned">Calories Burned:</label>
-                    <input type="number" name="caloriesBurned" value="<?php echo $workout['CaloriesBurned']; ?>" required><br>
+                    <input type="number" name="caloriesBurned" required><br>
 
                     <label for="timeWorkedOut">Time Worked Out (minutes):</label>
-                    <input type="number" name="timeWorkedOut" value="<?php echo $workout['TimeWorkedOut']; ?>" required><br>
+                    <input type="number" name="timeWorkedOut" required><br>
 
                     <button type="submit">Save</button>
                 </form>
             </li>
-        <?php endforeach; ?>
+        <?php endif; ?>
     </ul>
     <a href="../tables.php">Return To Workouts</a>
 </body>
