@@ -27,6 +27,8 @@ if(count($_POST)>0){
 				//1. Save the user's data into the session
 				$_SESSION['email']=$_POST['email'];
 				$_SESSION['password']=$_POST['password'];
+				$_SESSION['id']=$line[3];
+				
 				header("Location: index.php");
 				//2. Show a welcome message
 				echo 'Welcome to our website';$showForm=false;

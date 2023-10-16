@@ -1,5 +1,23 @@
 <!DOCTYPE html>
 <?php
+function countLinesInCSV($file_path) {
+    $line_count = 0;
+
+    if (($handle = fopen($file_path, "r")) !== false) {
+        while (($data = fgetcsv($handle)) !== false) {
+            $line_count++;
+        }
+        fclose($handle);
+    }
+
+    return $line_count;
+}
+
+// Usage example:
+$csv_file = "your_csv_file.csv";
+$line_count = countLinesInCSV("data/users.csv");
+echo "Total lines in the CSV file: $line_count";
+
 function createcsv(){
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $name = $_POST["email"];
@@ -11,8 +29,9 @@ function createcsv(){
             $csvFile = 'data/users.csv';
 			$fp=fopen($csvFile,"a");
 			$admin=0;
+			$id=countLinesInCSV("data/users.csv")+1;
 			$list=array(
-			array($name,$password,$admin),
+			array($name,$password,$admin,$id),
 			
 			
 			);

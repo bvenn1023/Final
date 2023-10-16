@@ -1,0 +1,16 @@
+[
+    {
+        "WorkoutName": "jumprope",
+        "Exercises": "jump",
+        "CalorieBurnGoal": "100",
+        "CaloriesBurned": "100",
+        "TimeWorkedOut": "30"
+    },
+    {
+        "WorkoutName": "jumprope",
+        "Exercises": "jump",
+        "CalorieBurnGoal": "100",
+        "CaloriesBurned": "100",
+        "TimeWorkedOut": "30"
+    }
+]

@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-$userId = $_SESSION['email'];
+$userId = $_SESSION['id'];
 
 function getUserWorkoutData($userId)
 {
@@ -44,8 +44,8 @@ function saveUserWorkoutData($userId, $data)
 
 function deleteUserWorkoutData($userId, $index)
 {
-    $filePath = $userId . '.json';
-
+    $filePath = $_SESSION['id'] . '.json';
+	$filePath='will_nku_edu.json';
     $jsonData = file_get_contents($filePath);
     $data = json_decode($jsonData, true);
 
@@ -99,7 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
     <h1>Workout Tracker</h1>
-    <h2>Welcome, <?php echo $userId; ?>!</h2>
+    <h2>Welcome, <?php echo $_SESSION['email']; ?>!</h2>
     <h3>Your Workout Data:</h3>
     <ul>
         <?php if (!empty($userWorkoutData)) : ?>
