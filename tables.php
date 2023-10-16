@@ -74,15 +74,11 @@ $userWorkoutData = getUserWorkoutData($userId);
 
             <!-- Divider -->
             <hr class="sidebar-divider">
-
-          
-
-          
-
-        
+       
    
             <!-- Nav Item - Pages Collapse Menu -->
             <?php //only executes if user is admin, links to admin features
+
 			if ($_SESSION['admin']==true){?>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
@@ -159,23 +155,22 @@ $userWorkoutData = getUserWorkoutData($userId);
                             </div>
                         </li>
 
-                        
-                       
-                       
-
                         <div class="topbar-divider d-none d-sm-block"></div>
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION["email"];?></span>
                                 <form method="POST">
-									<input type="submit" name="logout" value="logout">
-								</form>
+									                  <input type="submit" name="logout" value="logout">
+								                </form>
                             </a>
                          
+
                         </li>
                             
+
 
                     </ul>
 
@@ -189,7 +184,7 @@ $userWorkoutData = getUserWorkoutData($userId);
                     <h1 class="h3 mb-2 text-gray-800">Saved Workouts</h1>
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
-                       
+
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -203,6 +198,7 @@ $userWorkoutData = getUserWorkoutData($userId);
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <?php $loopIndex = 0; ?>
                                         <?php foreach ($userWorkoutData as $workout) : ?>
                                             <tr>
                                                 <td><?php echo $workout['WorkoutName']; ?></td>
@@ -211,7 +207,10 @@ $userWorkoutData = getUserWorkoutData($userId);
                                                 <td><?php echo $workout['CaloriesBurned']; ?></td>
                                                 <td><?php echo $workout['TimeWorkedOut']; ?></td>
                                             </tr>
+
+                                            <?php $loopIndex++; ?>
                                         <?php endforeach; ?>
+
                                     <tbody>
                                         <a href="lib/edit.php">Edit Workout</a>
                                     </tbody>

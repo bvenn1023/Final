@@ -44,7 +44,8 @@ function saveUserWorkoutData($userId, $data)
 
 function deleteUserWorkoutData($userId, $index)
 {
-    $filePath = 'lib/' . $userId . '.json';
+    $filePath = $userId . '.json';
+
     $jsonData = file_get_contents($filePath);
     $data = json_decode($jsonData, true);
 
@@ -121,12 +122,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <input type="number" name="timeWorkedOut" value="<?php echo $workout['TimeWorkedOut']; ?>" required><br>
 
                         <button type="submit">Save</button><br>
-
-                    </form>
-                    <form method='post' action='delete.php'>
                         <input type='hidden' name='delete_index' value='{$index}'>
                         <button type='submit'>Delete</button>
-                        </form>
+                    </form>
+
                 </li>
             <?php endforeach; ?>
         <?php else : ?>
