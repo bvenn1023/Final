@@ -3,6 +3,7 @@
 
 <?php
 session_start();
+require 'users.php';
 if ($_SESSION['admin']==true){?>
 
 
