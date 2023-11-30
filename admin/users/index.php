@@ -3,8 +3,8 @@
 
 <?php
 session_start();
+if ($_SESSION['admin']==true){?>
 
-?>
 
 <head>
 
@@ -64,8 +64,7 @@ session_start();
         
    
             <!-- Nav Item - Pages Collapse Menu -->
-            <?php //only executes if user is admin, links to admin features
-			if ($_SESSION['admin']==true){?>
+           
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
                     <i class="fas fa-fw fa-folder"></i>
@@ -185,15 +184,16 @@ session_start();
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach ($userWorkoutData as $workout) : ?>
+                                        <?php  //some database calls here?>
+										
                                             <tr>
                                                 <td>database</td>
                                                 <td>database</td>
                                            
                                             </tr>
-                                        <?php endforeach; ?>
+                                        
                                     <tbody>
-                                        <a href="lib/edit.php">Edit Workout</a>
+                                        <a href="detail.php">Edit Workout</a>
                                     </tbody>
                                 </table>
                             </div>
@@ -266,7 +266,7 @@ session_start();
 </body>
 
 </html>
-
+<?php}else{die('not an admin')}?>
 
 
 
