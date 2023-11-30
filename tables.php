@@ -74,28 +74,28 @@ $userWorkoutData = getUserWorkoutData($userId);
 
             <!-- Divider -->
             <hr class="sidebar-divider">
-       
-   
+
+
             <!-- Nav Item - Pages Collapse Menu -->
             <?php //only executes if user is admin, links to admin features
 
-			if ($_SESSION['admin']==true){?>
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Pages</span>
-                </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Admin Features:</h6>
-                        <a class="collapse-item" href="admin/users/index.php">Edit Users</a>
-                        <a class="collapse-item" href="admin/pages/index.php">Edit Pages</a>
-                       
+            if ($_SESSION['admin'] == true) { ?>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+                        <i class="fas fa-fw fa-folder"></i>
+                        <span>Pages</span>
+                    </a>
+                    <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <h6 class="collapse-header">Admin Features:</h6>
+                            <a class="collapse-item" href="admin/users/index.php">Edit Users</a>
+                            <a class="collapse-item" href="admin/pages/index.php">Edit Pages</a>
+
+                        </div>
                     </div>
-                </div>
-            </li>
-			<?php }?>
-            
+                </li>
+            <?php } ?>
+
 
             <!-- Nav Item - Tables -->
             <li class="nav-item active">
@@ -130,8 +130,8 @@ $userWorkoutData = getUserWorkoutData($userId);
                             <i class="fa fa-bars"></i>
                         </button>
                     </form>
-						
-					<h2>Gymify Fitness Application</h2>
+
+                    <h2>Gymify Fitness Application</h2>
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
 
@@ -154,22 +154,21 @@ $userWorkoutData = getUserWorkoutData($userId);
                                 </form>
                             </div>
                         </li>
-
                         <div class="topbar-divider d-none d-sm-block"></div>
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION["email"];?></span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION["email"]; ?></span>
                                 <form method="POST">
-									                  <input type="submit" name="logout" value="logout">
-								                </form>
+                                    <input type="submit" name="logout" value="logout">
+                                </form>
                             </a>
-                         
+
 
                         </li>
-                            
+
 
 
                     </ul>
@@ -179,12 +178,11 @@ $userWorkoutData = getUserWorkoutData($userId);
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">Saved Workouts</h1>
+                    <a href="lib\edit.php">Edit Workouts</a>
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
-
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -198,28 +196,20 @@ $userWorkoutData = getUserWorkoutData($userId);
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php $loopIndex = 0; ?>
-                                        <?php foreach ($userWorkoutData as $workout) : ?>
-                                            <tr>
-                                                <td><?php echo $workout['WorkoutName']; ?></td>
-                                                <td><?php echo $workout['Exercises']; ?></td>
-                                                <td><?php echo $workout['CalorieBurnGoal']; ?></td>
-                                                <td><?php echo $workout['CaloriesBurned']; ?></td>
-                                                <td><?php echo $workout['TimeWorkedOut']; ?></td>
-                                            </tr>
-
-                                            <?php $loopIndex++; ?>
-                                        <?php endforeach; ?>
-
-                                    <tbody>
-                                        <a href="lib/edit.php">Edit Workout</a>
+                                        <tr>
+                                            <td><?php echo $_SESSION['workoutName']; ?></td>
+                                            <td><?php echo $_SESSION['exercises']; ?></td>
+                                            <td><?php echo $_SESSION['calorieGoal']; ?></td>
+                                            <td><?php echo $_SESSION['caloriesBurned']; ?></td>
+                                            <td><?php echo $_SESSION['timeWorkedOut']; ?></td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-
                 </div>
+
                 <!-- /.container-fluid -->
 
             </div>
