@@ -170,10 +170,7 @@ if (isset ($_POST["logout"])){
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                 Total Workouts</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php countArraysInJsonFile("lib/".$_SESSION['email'].".json")?></div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php countArraysInJsonFile("lib/".$_SESSION['id'].".json")?></div>
                                         </div>
                                     </div>
                                 </div>
@@ -188,10 +185,7 @@ if (isset ($_POST["logout"])){
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                 Total Calories Burned</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php totalCalories("lib/".$_SESSION['email'].".json")?></div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php totalCalories("lib/".$_SESSION['id'].".json")?></div>
                                         </div>
                                     </div>
                                 </div>
@@ -208,13 +202,10 @@ if (isset ($_POST["logout"])){
                                             </div>
                                             <div class="row no-gutters align-items-center">
                                                 <div class="col-auto">
-                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?php totalTimeSpent("lib/".$_SESSION['email'].".json")?></div>
+                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?php totalTimeSpent("lib/".$_SESSION['id'].".json")?></div>
                                                 </div>
                                                 
                                             </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -229,10 +220,7 @@ if (isset ($_POST["logout"])){
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                                 Total Burn Goal</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php totalCaloriesGoal("lib/".$_SESSION['email'].".json")?></div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-comments fa-2x text-gray-300"></i>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php totalCaloriesGoal("lib/".$_SESSION['id'].".json")?></div>
                                         </div>
                                     </div>
                                 </div>
