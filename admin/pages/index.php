@@ -1,11 +1,7 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>index</title>
-</head>
-<body>
 
-<table border="1">
+
 <?php require "pages.php";
 session_start();
 	
@@ -18,15 +14,7 @@ session_start();
     $txtFiles = glob("../..". '/*.*');
 
     // Check if there are any .txt files
-
-?>	
-</table>
-
-
-
-
-
-<?php
+	//rest of code in tables section
 
 
 if ($_SESSION['admin']==true){?>
@@ -40,7 +28,7 @@ if ($_SESSION['admin']==true){?>
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Tables</title>
+    <title>Admin Pages</title>
 
     <!-- Custom fonts for this template -->
     <link href="../../assets/vendors/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -99,8 +87,8 @@ if ($_SESSION['admin']==true){?>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Admin Features:</h6>
-                        <a class="collapse-item" href="admin/users/index.php">Edit Users</a>
-                        <a class="collapse-item" href="admin/pages/index.php">Edit Pages</a>
+                        <a class="collapse-item" href="../users/index.php">Edit Users</a>
+                        <a class="collapse-item" href="../pages/index.php">Edit Pages</a>
                        
                     </div>
                 </div>
@@ -193,7 +181,7 @@ if ($_SESSION['admin']==true){?>
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Saved Workouts</h1>
+                    <h1 class="h3 mb-2 text-gray-800">Pages</h1>
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                        
@@ -289,21 +277,21 @@ if ($_SESSION['admin']==true){?>
     </div>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="assets/vendors/jquery/jquery.min.js"></script>
-    <script src="assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../../assets/vendors/jquery/jquery.min.js"></script>
+    <script src="../../assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
-    <script src="assets/vendors/jquery-easing/jquery.easing.min.js"></script>
+    <script src="../../assets/vendors/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="assets/js/sb-admin-2.min.js"></script>
+    <script src="../../assets/js/sb-admin-2.min.js"></script>
 
     <!-- Page level plugins -->
-    <script src="assets/vendors/datatables/jquery.dataTables.min.js"></script>
+    <script src="../../assets/vendors/datatables/jquery.dataTables.min.js"></script>
     <script src="assets/vendors/datatables/dataTables.bootstrap4.min.js"></script>
 
     <!-- Page level custom scripts -->
-    <script src="assets/js/demo/datatables-demo.js"></script>
+    <script src="../../assets/js/demo/datatables-demo.js"></script>
 
 </body>
 
