@@ -3,6 +3,38 @@
 <?php
 
 
+//Configure credentials
+
+
+//Establish a connection to the db
+
+function signin($email,$password){
+	$host='localhost';
+	$name='final';
+	$user='root';
+	$pass='';
+
+	//Specify options
+	$opt = [
+		PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+		PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+		PDO::ATTR_EMULATE_PREPARES => false
+	];
+	$connection=new PDO('mysql:host='.$host.';dbname='.$name.';charset=utf8mb4',$user,$pass,$opt);
+	$query=$connection->prepare('SELECT * FROM users WHERE email=?');
+	$query->execute([$email]);
+	if($query->rowCount()==0) return false;
+	$result=$query->fetch();
+	if($result['password']!=$password) return false;
+	$_SESSION['ID']=$result['user_ID'];
+	$_SESSION['role']=$result['role'];
+	$_SESSION['firstname']=$result['firstname'];
+	$_SESSION['lastname']=$result['lastname'];
+	return true;
+}
+
+
+
 
 require_once('functions.php');
 require "admin/users/users.php";
