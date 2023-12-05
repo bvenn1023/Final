@@ -3,8 +3,9 @@
 
 <?php
 session_start();
+require 'users.php';
+if ($_SESSION['admin']==true){?>
 
-?>
 
 <head>
 
@@ -17,7 +18,7 @@ session_start();
     <title>SB Admin 2 - Tables</title>
 
     <!-- Custom fonts for this template -->
-    <link href="assets/vendors/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="../../assets/vendors/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
     <!-- Custom styles for this template -->
@@ -64,8 +65,7 @@ session_start();
         
    
             <!-- Nav Item - Pages Collapse Menu -->
-            <?php //only executes if user is admin, links to admin features
-			if ($_SESSION['admin']==true){?>
+           
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
                     <i class="fas fa-fw fa-folder"></i>
@@ -168,7 +168,7 @@ session_start();
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Saved Workouts</h1>
+                    <h1 class="h3 mb-2 text-gray-800">Users</h1>
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                        
@@ -177,23 +177,23 @@ session_start();
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Workout Name</th>
-                                            <th>Exercises</th>
-                                            <th>Calorie Burn Goal</th>
-                                            <th>Calories Burned</th>
-                                            <th>Time Worked Out (Minutes)</th>
+                                            <th>Email</th>
+                                            <th>First Name</th>
+                                            <th>Last Name</th>
+                                            <th>Role</th>
+                                            
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach ($userWorkoutData as $workout) : ?>
-                                            <tr>
-                                                <td>database</td>
-                                                <td>database</td>
+                                        <?php  //printed from database in users.php?>
+										
+                                            <?php printUsers();?>
+                                                
                                            
-                                            </tr>
-                                        <?php endforeach; ?>
+                                            
+                                        
                                     <tbody>
-                                        <a href="lib/edit.php">Edit Workout</a>
+                                        <a href="detail.php">Edit Workout</a>
                                     </tbody>
                                 </table>
                             </div>
@@ -266,7 +266,7 @@ session_start();
 </body>
 
 </html>
-
+<?php}else{die('not an admin')}?>
 
 
 
