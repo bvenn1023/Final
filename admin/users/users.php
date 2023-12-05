@@ -1,97 +1,40 @@
 <?php
-function printcsv()
-{
-    // Specify the absolute path to the CSV file
-    $csvFile = '../../data/users.csv';
 
-    // Check if the CSV file exists
-    if (file_exists($csvFile)) {
-        
-        $csvData = array_map('str_getcsv', file($csvFile));
-		//dont think this does anything here
-        $headers = array_shift($csvData);
-		$count=0;
-        foreach ($csvData as $row) {
-        //print_r($row);
-		$count+=1;
-		
-		echo "<tr>";
-		echo '<td><a href="detail.php?name=' . urlencode($count) . '">' . $count . '</a></td>';
-		echo "<td>".$row[0]."</td>";
-		echo '<td><a href="edit.php?name=' . urlencode($count) . '">Edit</a> | <a href="delete.php?name=' . urlencode($count) . '">Delete</a></td>';
-		echo "</tr>";
-		
-		
-        }
-		
-       
-    } else {
-        echo "CSV file not found.";
-    }
-}
-
-
-
-
-
-
-
-function getCSVRow($csvFilePath, $lineNumber) {
-    if (($handle = fopen($csvFilePath, "r")) !== FALSE) {
-        $rowNumber = 0;
-        
-        while (($data = fgetcsv($handle, 0, ',')) !== FALSE) {
-            $rowNumber++;
-            
-            if ($rowNumber == $lineNumber) {
-                fclose($handle);
-                return $data; // Return the row as an array
-            }
-        }
-        
-        fclose($handle);
-    }
-
-    return null; // Row not found or file couldn't be opened
-}
-
+function printUsers(){
 	
 	
+		$host='localhost';
+	$name='final';
+	$user='root';
+	$pass='';
 
-
-
-function deletecsv($path,$num){
-	
-	$csvData = file($path);
-	if ($num >= 0 && $num < count($csvData)) {
-	// Remove the specified line
-		unset($csvData[$num]);
-		file_put_contents($path, implode('', $csvData));
+	//Specify options
+	$opt = [
+		PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+		PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+		PDO::ATTR_EMULATE_PREPARES => false
+	];
+	$connection=new PDO('mysql:host='.$host.';dbname='.$name.';charset=utf8mb4',$user,$pass,$opt);
+	$query=$connection->prepare('SELECT * FROM users ');
+	$query->execute();
+	while($row=$query->fetch()){
+		echo '<tr>';
+			echo '<td>';
+			echo $row['email'];
+			echo '</td><td>';
+			echo $row['firstname'];
+			echo '</td><td>';
+			echo $row['lastname'];
+			echo '</td><td>';
+			echo $row['role'];
+			echo '</td>';
+		echo '</tr>';
+		
+		
 	}
 	
-	
 }
 
-function editcsv($csvFilePath, $lineNumber, $postData) {
-    $rows = array_map('str_getcsv', file($csvFilePath));
 
-    // check if the line number is valid
-    if ($lineNumber >= 1 && $lineNumber <= count($rows)) {
-        
-        $rows[$lineNumber - 1] = $postData;
-        // Reopen the CSV file for writing
-        $file = fopen($csvFilePath, 'w');
 
-        // Write the updated data back to the CSV file
-        foreach ($rows as $row) {
-            fputcsv($file, $row);
-        }
-
-        fclose($file);
-
-        return true; // Edit successful
-    } else {
-        return false; // Invalid line number
-    }
-}
 ?>

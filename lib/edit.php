@@ -45,7 +45,9 @@ $userWorkoutData = getUserWorkoutData($userId);
     <!-- Custom styles for this page -->
     <link href="../assets/vendors/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
+
 </head>
+
 
 <body id="page-top">
 
@@ -201,6 +203,7 @@ $userWorkoutData = getUserWorkoutData($userId);
                 $query = $connection->prepare('SELECT * FROM workouts WHERE user_id = ?');
                 $query->execute([$user_id]);
                 ?>
+
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
                     <!-- Page Heading -->
@@ -220,6 +223,7 @@ $userWorkoutData = getUserWorkoutData($userId);
                                         </tr>
                                     </thead>
                                     <tbody>
+
                                         <?php while ($row = $query->fetch()) : ?>
                                             <tr>
                                                 <td><?php echo $row['name']; ?></td>
@@ -228,6 +232,7 @@ $userWorkoutData = getUserWorkoutData($userId);
                                                 <td><?php echo $row['time_worked']; ?></td>
                                             </tr>
                                         <?php endwhile; ?>
+
                                     </tbody>
                                 </table>
                             </div>

@@ -1,7 +1,7 @@
 <!-- CREATE.PHP FOR TABLES.PHP -->
 
 <?php
-require_once('db.php');
+
 // $userId = $_SESSION['email'];
 // $filePath = $userId . '.json';
 // Check if the user is logged in
@@ -316,6 +316,7 @@ $userWorkoutData = getUserWorkoutData($userId);  -->
                                         </tr>
                                         <?php
 
+
                                         $host = 'localhost';
                                         $name = 'final';
                                         $user = 'root';
@@ -370,6 +371,7 @@ $userWorkoutData = getUserWorkoutData($userId);  -->
 
                                             </tbody>
                                         </table>
+
 
                                     </tbody>
                                 </table>

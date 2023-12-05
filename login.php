@@ -3,26 +3,54 @@
 <?php
 
 
+//Configure credentials
+
+
+//Establish a connection to the db
+
+function signin($email,$password){
+	$host='localhost';
+	$name='final';
+	$user='root';
+	$pass='';
+
+	//Specify options
+	$opt = [
+		PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+		PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+		PDO::ATTR_EMULATE_PREPARES => false
+	];
+	$connection=new PDO('mysql:host='.$host.';dbname='.$name.';charset=utf8mb4',$user,$pass,$opt);
+	$query=$connection->prepare('SELECT * FROM users WHERE email=?');
+	$query->execute([$email]);
+	if($query->rowCount()==0) return false;
+	$result=$query->fetch();
+	if($result['password']!=$password) return false;
+	$_SESSION['ID']=$result['user_ID'];
+	$_SESSION['role']=$result['role'];
+	$_SESSION['firstname']=$result['firstname'];
+	$_SESSION['lastname']=$result['lastname'];
+	return true;
+}
+
+
+
+
 require_once('functions.php');
 require "admin/users/users.php";
+
 
 if(isset($_SESSION['email'])) die('You are already sign in, no need to sign in.');
 $showForm=true;
 if(count($_POST)>0){
 	if(isset($_POST['email'][0]) && isset($_POST['password'][0])){
 		// process information
-		$index=0;
-		$fp=fopen('data/users.csv','r');
-		while(!feof($fp)){
-			$line=fgets($fp);
-			
-			if(strstr($line,'<?php die() ?>') || strlen($line)<5) continue;
-			$index++;
-			$line=explode(',',trim($line));
-			
 		
 			
-			if($line[0]==$_POST['email'] && $line[1]==$_POST['password']){
+		//change age to DOB
+		//change workouts
+			
+			if(signin($_POST['email'],$_POST['password'])==true){
 				// Sign the user in
 				//1. Save the user's data into the session
 				$_SESSION['email']=$_POST['email'];
@@ -32,7 +60,7 @@ if(count($_POST)>0){
 				header("Location: index.php");
 				//2. Show a welcome message
 				echo 'Welcome to our website';$showForm=false;
-				if($line[2]==1){
+				if($_SESSION['role']==1){
 					$_SESSION['admin']=true;
 					header("Location: admin/index.php");
 					
@@ -41,14 +69,14 @@ if(count($_POST)>0){
 			}
 		 }
 		}
-		fclose($fp);
+		
 		// The credentials are wrong
 		if($showForm) {echo 'Your credentials are wrong';}
 					//print_r($line);
 					//echo $_POST['email'];
 					//echo $_POST['password'];
 		}else echo 'Email and password are missing';
-}
+
 //if user isAdmin() header admin folder
 if($showForm){
 ?>
