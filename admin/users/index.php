@@ -177,10 +177,14 @@ if ($_SESSION['admin']==true){?>
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
+											<th> Detail </th>
                                             <th>Email</th>
                                             <th>First Name</th>
                                             <th>Last Name</th>
                                             <th>Role</th>
+											<th>Edit</th>
+											<th>Delete</th>
+											
                                             
                                         </tr>
                                     </thead>

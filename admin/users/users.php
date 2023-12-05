@@ -17,8 +17,15 @@ function printUsers(){
 	$connection=new PDO('mysql:host='.$host.';dbname='.$name.';charset=utf8mb4',$user,$pass,$opt);
 	$query=$connection->prepare('SELECT * FROM users ');
 	$query->execute();
+
 	while($row=$query->fetch()){
 		echo '<tr>';
+		
+			echo '<td>';
+			echo '<a href="detail.php?getid=' . $row['user_ID'] . '">Detail</a>';
+
+			
+			echo '</td>';
 			echo '<td>';
 			echo $row['email'];
 			echo '</td><td>';
@@ -31,7 +38,33 @@ function printUsers(){
 		echo '</tr>';
 		
 		
+		
 	}
+	
+}
+
+
+function printAll(){
+	
+	$host='localhost';
+	$name='final';
+	$user='root';
+	$pass='';
+
+	//Specify options
+	$opt = [
+		PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+		PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+		PDO::ATTR_EMULATE_PREPARES => false
+	];
+	$connection=new PDO('mysql:host='.$host.';dbname='.$name.';charset=utf8mb4',$user,$pass,$opt);
+	$query=$connection->prepare('SELECT * FROM users where ID=?');
+	$query->execute($_GET['getid']);
+	
+	
+	
+	
+	
 	
 }
 
