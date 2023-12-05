@@ -22,7 +22,7 @@ function printUsers(){
 		echo '<tr>';
 		
 			echo '<td>';
-			echo '<a href="detail.php?getid=' . $row['user_ID'] . '">Detail</a>';
+			echo '<a href="detail.php?getid=' . $row['ID'] . '">Detail</a>';
 
 			
 			echo '</td>';
@@ -34,7 +34,11 @@ function printUsers(){
 			echo $row['lastname'];
 			echo '</td><td>';
 			echo $row['role'];
-			echo '</td>';
+			echo '</td><td>';
+			echo '<a href="edit.php?getid=' . $row['ID'] . '">Edit</a>';
+			echo ' | ';
+			echo '<a href="delete.php?getid=' . $row['ID'] . '">Delete</a>';
+			
 		echo '</tr>';
 		
 		
@@ -59,8 +63,25 @@ function printAll(){
 	];
 	$connection=new PDO('mysql:host='.$host.';dbname='.$name.';charset=utf8mb4',$user,$pass,$opt);
 	$query=$connection->prepare('SELECT * FROM users where ID=?');
-	$query->execute($_GET['getid']);
-	
+	$query->execute([$_GET['getid']]);
+	foreach ($query as $item){
+		echo '<tr>';
+			echo '<td>';
+			echo $item['ID'];
+			echo'</td><td>';
+			echo $item['email'];
+			echo '</td><td>';
+			
+			echo $item['firstname'];
+			echo '</td><td>';
+			echo $item['lastname'];
+			echo '</td><td>';
+			echo $item['role'];
+		echo '</tr>';
+		
+		
+		
+	}
 	
 	
 	

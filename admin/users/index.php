@@ -182,8 +182,8 @@ if ($_SESSION['admin']==true){?>
                                             <th>First Name</th>
                                             <th>Last Name</th>
                                             <th>Role</th>
-											<th>Edit</th>
-											<th>Delete</th>
+											<th>Operations</th>
+											
 											
                                             
                                         </tr>

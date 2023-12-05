@@ -24,7 +24,7 @@ function signin($email,$password){
 	if($query->rowCount()==0) return false;
 	$result=$query->fetch();
 	if($result['password']!=$password) return false;
-	$_SESSION['ID']=$result['user_ID'];
+	$_SESSION['ID']=$result['ID'];
 	$_SESSION['role']=$result['role'];
 	$_SESSION['firstname']=$result['firstname'];
 	$_SESSION['lastname']=$result['lastname'];
