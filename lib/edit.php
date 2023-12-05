@@ -45,7 +45,9 @@ $userWorkoutData = getUserWorkoutData($userId);
     <!-- Custom styles for this page -->
     <link href="../assets/vendors/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
-</head> 
+
+</head>
+
 
 <body id="page-top">
 
@@ -177,6 +179,30 @@ $userWorkoutData = getUserWorkoutData($userId);
 
                 </nav>
                 <!-- End of Topbar -->
+                <?php
+
+                $host = 'localhost';
+                $name = 'final';
+                $user = 'root';
+                $pass = '';
+
+                //Specify options
+                $opt = [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_EMULATE_PREPARES => false
+                ];
+                $user_id = $_SESSION['user_id'];
+
+                // Connect to the database
+                $connection = new PDO("mysql:host=$host;dbname=$name;", $user, $pass);
+
+                // Insert new workout (same as before...)
+
+                // Get workouts for current user
+                $query = $connection->prepare('SELECT * FROM workouts WHERE user_id = ?');
+                $query->execute([$user_id]);
+                ?>
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
@@ -197,21 +223,16 @@ $userWorkoutData = getUserWorkoutData($userId);
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php
-                                        if (isset($_SESSION['workoutData'])) {
-                                            foreach ($_SESSION['workoutData'] as $workout) {
-                                                echo "<tr>";
-                                                echo "<td>" . $workout['WorkoutName'] . "</td>";
-                                                echo "<td>" . $workout['Exercises'] . "</td>";
-                                                echo "<td>" . $workout['CalorieBurnGoal'] . "</td>";
-                                                echo "<td>" . $workout['CaloriesBurned'] . "</td>";
-                                                echo "<td>" . $workout['TimeWorkedOut'] . "</td>";
-                                                echo "</tr>";
-                                            }
-                                        } else {
-                                            echo "<tr><td colspan='5'>No workouts created yet. <a href='create.php'>Create a new workout</a></td></tr>";
-                                        }
-                                        ?>
+
+                                        <?php while ($row = $query->fetch()) : ?>
+                                            <tr>
+                                                <td><?php echo $row['name']; ?></td>
+                                                <td><?php echo $row['exercises']; ?></td>
+                                                <td><?php echo $row['cal_burned']; ?></td>
+                                                <td><?php echo $row['time_worked']; ?></td>
+                                            </tr>
+                                        <?php endwhile; ?>
+
                                     </tbody>
                                 </table>
                             </div>

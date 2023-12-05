@@ -176,12 +176,37 @@ $userWorkoutData = getUserWorkoutData($userId);
 
                 </nav>
                 <!-- End of Topbar -->
+                <?php
 
+                $host = 'localhost';
+                $name = 'final';
+                $user = 'root';
+                $pass = '';
+
+                //Specify options
+                $opt = [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_EMULATE_PREPARES => false
+                ];
+                $connection = new PDO("mysql:host=$host;dbname=$name;", $user, $pass);
+
+                // Get user ID from session 
+                $user_id = $_SESSION['user_id'];
+
+                // Get workouts for user
+                $query = $connection->prepare('SELECT * FROM workouts WHERE user_id = ?');
+
+                $query->execute([$user_id]);
+
+                ?>
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">Saved Workouts</h1>
+                    <a href="../Final/lib/edit.php">Edit Workouts</a>
+
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
 
@@ -198,6 +223,18 @@ $userWorkoutData = getUserWorkoutData($userId);
                                         </tr>
                                     </thead>
                                     <tbody>
+
+                                        <tr>
+                                            <?php while ($row = $query->fetch()) : ?>
+                                        <tr>
+                                            <td><?php echo $row['name']; ?></td>
+                                            <td><?php echo $row['exercises']; ?></td>
+                                            <td><?php echo $row['cal_burned']; ?></td>
+                                            <td><?php echo $row['time_worked']; ?></td>
+                                        </tr>
+                                    <?php endwhile; ?>
+                                    </tr>
+
                                         <?php $loopIndex = 0; ?>
                                         <?php foreach ($userWorkoutData as $workout) : ?>
                                             <tr>
@@ -213,6 +250,7 @@ $userWorkoutData = getUserWorkoutData($userId);
 
                                     <tbody>
                                         <a href="lib/edit.php">Edit Workout</a>
+
                                     </tbody>
                                 </table>
                             </div>
