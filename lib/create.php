@@ -1,6 +1,7 @@
 <!-- CREATE.PHP FOR TABLES.PHP -->
 
 <?php
+require_once('db.php');
 // $userId = $_SESSION['email'];
 // $filePath = $userId . '.json';
 // Check if the user is logged in
@@ -314,28 +315,62 @@ $userWorkoutData = getUserWorkoutData($userId);  -->
                                             </form>
                                         </tr>
                                         <?php
-                                        if (isset($_POST['workoutName'])) {
-                                            $_SESSION['workoutName'] = $_POST['workoutName'];
-                                            $_SESSION['exercises'] = $_POST['exercises'];
-                                            $_SESSION['calorieGoal'] = $_POST['calorieGoal'];
-                                            $_SESSION['caloriesBurned'] = $_POST['caloriesBurned'];
-                                            $_SESSION['timeWorkedOut'] = $_POST['timeWorkedOut'];
-                                        }
-                                        // $query = $db->prepare('SELECT * FROM workouts WHERE email=?');
-                                        //$query->execute([$_POST['workoutName'], $_POST['exercises'], $_POST['calorieGoal'], $_POST['caloriesBurned'], $_POST['timeWorkedOut']]);
 
+                                        $host = 'localhost';
+                                        $name = 'final';
+                                        $user = 'root';
+                                        $pass = '';
 
-                                        //$_SESSION['workoutData'] = $workoutData;
+                                        //Specify options
+                                        $opt = [
+                                            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                                            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                                            PDO::ATTR_EMULATE_PREPARES => false
+                                        ];
+                                        $connection = new PDO('mysql:host=' . $host . ';dbname=' . $name . ';charset=utf8mb4', $user, $pass, $opt);
+
+                                                if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+                                                    // Get form data
+                                                    $name = $_POST['workoutName'];
+                                                    $exercises = $_POST['exercises'];
+                                                    $calories = $_POST['caloriesBurned'];
+                                                    $time = $_POST['timeWorkedOut'];
+
+                                                    // Insert into database
+                                                    $stmt = $connection->prepare("INSERT INTO workouts (name, exercises, cal_burned, time_worked) VALUES (?, ?, ?, ?)");
+
+                                                    $stmt->execute([$name, $exercises, $calories, $time]);
+                                                }
+
+                                                // Get workouts for display
+                                                $query = $connection->prepare('SELECT * FROM workouts');
+                                                $query->execute();
                                         ?>
-                                        <?php foreach ($userWorkoutData as $workout) : ?>
-                                            <tr>
-                                                <td><?php echo $workout['WorkoutName']; ?></td>
-                                                <td><?php echo $workout['Exercises']; ?></td>
-                                                <td><?php echo $workout['CalorieBurnGoal']; ?></td>
-                                                <td><?php echo $workout['CaloriesBurned']; ?></td>
-                                                <td><?php echo $workout['TimeWorkedOut']; ?></td>
-                                            </tr>
-                                        <?php endforeach; ?>
+
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Exercises</th>
+                                                    <th>Calories Burned</th>
+                                                    <th>Time</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+
+                                                <?php while ($row = $query->fetch()) : ?>
+                                                    <tr>
+                                                        <td><?php echo $row['name']; ?></td>
+                                                        <td><?php echo $row['cal_burned']; ?></td>
+                                                        <td><?php echo $row['time_worked']; ?></td>
+                                                    </tr>
+                                                <?php endwhile; ?>
+
+                                            </tbody>
+                                        </table>
+
                                     </tbody>
                                 </table>
                             </div>
