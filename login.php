@@ -32,6 +32,7 @@ function signin($email,$password){
 }
 
 
+
 require_once('functions.php');
 require "admin/users/users.php";
 
@@ -43,7 +44,8 @@ if(count($_POST)>0){
 		// process information
 		
 			
-		
+		//change age to DOB
+		//change workouts
 			
 			if(signin($_POST['email'],$_POST['password'])==true){
 				// Sign the user in
@@ -53,7 +55,7 @@ if(count($_POST)>0){
 				header("Location: index.php");
 				//2. Show a welcome message
 				echo 'Welcome to our website';$showForm=false;
-				if($line[2]==1){
+				if($_SESSION['role']==1){
 					$_SESSION['admin']=true;
 					header("Location: admin/index.php");
 					

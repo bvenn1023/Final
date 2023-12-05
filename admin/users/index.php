@@ -168,7 +168,7 @@ if ($_SESSION['admin']==true){?>
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Saved Workouts</h1>
+                    <h1 class="h3 mb-2 text-gray-800">Users</h1>
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                        
@@ -177,21 +177,20 @@ if ($_SESSION['admin']==true){?>
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Workout Name</th>
-                                            <th>Exercises</th>
-                                            <th>Calorie Burn Goal</th>
-                                            <th>Calories Burned</th>
-                                            <th>Time Worked Out (Minutes)</th>
+                                            <th>Email</th>
+                                            <th>First Name</th>
+                                            <th>Last Name</th>
+                                            <th>Role</th>
+                                            
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php  //some database calls here?>
+                                        <?php  //printed from database in users.php?>
 										
-                                            <tr>
-                                                <td>database</td>
-                                                <td>database</td>
+                                            <?php printUsers();?>
+                                                
                                            
-                                            </tr>
+                                            
                                         
                                     <tbody>
                                         <a href="detail.php">Edit Workout</a>
