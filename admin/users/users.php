@@ -1,5 +1,13 @@
 <?php
 
+session_start();
+if (!isset($_SESSION['email']) || $_SESSION['role']!=1) die('This is a private area, you are not allowed here');
+
+
+
+
+//prints index information from all users
+//index page
 function printUsers(){
 	
 	
@@ -47,7 +55,8 @@ function printUsers(){
 	
 }
 
-
+//function prints all information on specific user from databse
+//detail page
 function printAll(){
 	
 	$host='localhost';
@@ -84,10 +93,92 @@ function printAll(){
 	}
 	
 	
+}
+
+//delete
+function deleteUser(){
+	$host='localhost';
+	$name='final';
+	$user='root';
+	$pass='';
+
+	//Specify options
+	$opt = [
+		PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+		PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+		PDO::ATTR_EMULATE_PREPARES => false
+	];
+	$connection=new PDO('mysql:host='.$host.';dbname='.$name.';charset=utf8mb4',$user,$pass,$opt);
+	$query=$connection->prepare('DELETE FROM users where ID=?');
+	$query->execute([$_GET['getid']]);
 	
 	
 	
 }
+
+
+function getData($item){
+
+$host='localhost';
+	$name='final';
+	$user='root';
+	$pass='';
+
+	//Specify options
+	$opt = [
+		PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+		PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+		PDO::ATTR_EMULATE_PREPARES => false
+	];
+	$connection=new PDO('mysql:host='.$host.';dbname='.$name.';charset=utf8mb4',$user,$pass,$opt);
+	$query=$connection->prepare('SELECT * FROM users WHERE ID=?');
+	$query->execute([$_GET['getid']]);
+	$result=$query->fetch();
+	echo $result[$item];
+
+
+}
+
+
+function editData($id,$email,$password,$role){
+	try{
+		$host='localhost';
+		$name='final';
+		$user='root';
+		$pass='';
+
+		//Specify options
+		$opt = [
+			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+			PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+			PDO::ATTR_EMULATE_PREPARES => false
+		];
+		$connection=new PDO('mysql:host='.$host.';dbname='.$name.';charset=utf8mb4',$user,$pass,$opt);
+		$query = $connection->prepare("UPDATE users
+		SET email = :email,
+			password = :password,
+			role = :role
+		WHERE ID = :id");
+
+		$query->bindParam(':email', $email);
+		$query->bindParam(':password', $password);
+		$query->bindParam(':role', $role);
+		$query->bindParam(':id', $id);
+
+		$query->execute();
+	}catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+}
+
+	
+	
+	
+	
+	
+	
+}
+
+
 
 
 

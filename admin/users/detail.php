@@ -2,9 +2,18 @@
 <html lang="en">
 
 <?php
-session_start();
 require 'users.php';
-if ($_SESSION['admin']==true){?>
+if (!isset($_SESSION['email']) || $_SESSION['role']!=1) die('This is a private area, you are not allowed here');
+
+
+if (isset ($_POST["logout"])){
+	session_unset();
+	session_destroy();
+	header("Location: ../../login.php");
+	exit;
+}
+
+if ($_SESSION['role']==1){?>
 
 
 <head>
@@ -38,7 +47,7 @@ if ($_SESSION['admin']==true){?>
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../..index.php">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -50,7 +59,7 @@ if ($_SESSION['admin']==true){?>
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="index.php">
+                <a class="nav-link" href="../../index.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -74,8 +83,8 @@ if ($_SESSION['admin']==true){?>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Admin Features:</h6>
-                        <a class="collapse-item" href="admin/users/index.php">Edit Users</a>
-                        <a class="collapse-item" href="admin/pages/index.php">Edit Pages</a>
+                        <a class="collapse-item" href="../index.php">Edit Users</a>
+                        <a class="collapse-item" href="../pages/index.php">Edit Pages</a>
                        
                     </div>
                 </div>
@@ -251,21 +260,21 @@ if ($_SESSION['admin']==true){?>
     </div>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="assets/vendors/jquery/jquery.min.js"></script>
-    <script src="assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../../assets/vendors/jquery/jquery.min.js"></script>
+    <script src="../../assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
-    <script src="assets/vendors/jquery-easing/jquery.easing.min.js"></script>
+    <script src="../../assets/vendors/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="assets/js/sb-admin-2.min.js"></script>
+    <script src="../../assets/js/sb-admin-2.min.js"></script>
 
     <!-- Page level plugins -->
-    <script src="assets/vendors/datatables/jquery.dataTables.min.js"></script>
-    <script src="assets/vendors/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="../../assets/vendors/datatables/jquery.dataTables.min.js"></script>
+    <script src="../../assets/vendors/datatables/dataTables.bootstrap4.min.js"></script>
 
     <!-- Page level custom scripts -->
-    <script src="assets/js/demo/datatables-demo.js"></script>
+    <script src="../../assets/js/demo/datatables-demo.js"></script>
 
 </body>
 

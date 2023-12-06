@@ -2,7 +2,7 @@
 <html lang="en">
 <?php
 //Configure credentials
-
+session_start();
 
 //Establish a connection to the db
 
@@ -33,8 +33,8 @@ function signin($email,$password){
 
 
 
-require_once('functions.php');
-require "admin/users/users.php";
+
+
 
 
 if(isset($_SESSION['email'])) die('You are already sign in, no need to sign in.');
@@ -52,15 +52,16 @@ if(count($_POST)>0){
 				//1. Save the user's data into the session
 				$_SESSION['email']=$_POST['email'];
 				$_SESSION['password']=$_POST['password'];
-				header("Location: index.php");
+				
+				
 				//2. Show a welcome message
 				echo 'Welcome to our website';$showForm=false;
 				if($_SESSION['role']==1){
-					$_SESSION['admin']=true;
+					print_r($_SESSION['role']);
 					header("Location: admin/index.php");
 					
 				}else{
-					$_SESSION['admin']=false;
+					header("Location: index.php");
 			}
 		 }
 		}
