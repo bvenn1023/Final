@@ -2,26 +2,8 @@
 <html lang="en">
 
 <?php
+
 session_start();
-
-function getUserWorkoutData($userId)
-{
-    $filePath = 'lib/' . $_SESSION['id'] . '.json';
-
-    if (file_exists($filePath)) {
-        $jsonData = file_get_contents($filePath);
-    } else {
-        $jsonData = '[]';
-        file_put_contents($filePath, $jsonData);
-    }
-
-    $data = json_decode($jsonData, true);
-
-    return $data;
-}
-$userId = $_SESSION['id'];
-$userWorkoutData = getUserWorkoutData($userId);
-
 ?>
 
 <head>
@@ -55,7 +37,7 @@ $userWorkoutData = getUserWorkoutData($userId);
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../tables.php">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -67,7 +49,7 @@ $userWorkoutData = getUserWorkoutData($userId);
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="index.php">
+                <a class="nav-link" href="../tables.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -184,19 +166,19 @@ $userWorkoutData = getUserWorkoutData($userId);
                 $user = 'root';
                 $pass = '';
 
-                $connection = new PDO("mysql:dbname=final;", $user, $pass);
+                $connection = new PDO("mysql:dbname=$name;host=$host", $user, $pass);
 
                 // Get user ID
 
-                $user_id = $_SESSION['user_id'];
+                $user_id = $_SESSION['ID'];
                 //$_SESSION['user_id'] = $user_id;
-
+                //die();
                 // Get workouts
-                $query = $connection->prepare('SELECT workouts.* FROM workouts JOIN users ON workouts.user_ID= $user_id');
+                $query = $connection->prepare('SELECT workouts.* FROM workouts JOIN users ON workouts.user_ID= ?');
                 //$query = $connection->prepare('SELECT workouts.* FROM workouts JOIN users ON users.ID = workouts.user_ID');
-                //$query->execute(['user_id']);
+                $query->execute([$user_id]);
                 //$query->execute();
-                
+
                 ?>
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
@@ -229,7 +211,7 @@ $userWorkoutData = getUserWorkoutData($userId);
                                             <td><?php echo $row['cal_goal']; ?></td>
                                             <td><?php echo $row['time_worked']; ?></td>
                                             <td><?php echo $row['type']; ?></td>
-                                            
+
                                         </tr>
                                     <?php endwhile; ?>
                                     </tr>
@@ -238,7 +220,7 @@ $userWorkoutData = getUserWorkoutData($userId);
 
                                     <tbody>
                                         <a href="lib/edit.php">Edit Workout</a>
-
+                                        <? print_r($user_id) ?>
                                     </tbody>
                                 </table>
                             </div>
