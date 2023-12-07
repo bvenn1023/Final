@@ -2,26 +2,8 @@
 <html lang="en">
 
 <?php
+
 session_start();
-
-function getUserWorkoutData($userId)
-{
-    $filePath = 'lib/' . $_SESSION['id'] . '.json';
-
-    if (file_exists($filePath)) {
-        $jsonData = file_get_contents($filePath);
-    } else {
-        $jsonData = '[]';
-        file_put_contents($filePath, $jsonData);
-    }
-
-    $data = json_decode($jsonData, true);
-
-    return $data;
-}
-$userId = $_SESSION['id'];
-$userWorkoutData = getUserWorkoutData($userId);
-
 ?>
 
 <head>
@@ -55,7 +37,7 @@ $userWorkoutData = getUserWorkoutData($userId);
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../tables.php">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -67,35 +49,35 @@ $userWorkoutData = getUserWorkoutData($userId);
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="index.php">
+                <a class="nav-link" href="../tables.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
 
             <!-- Divider -->
             <hr class="sidebar-divider">
-       
-   
+
+
             <!-- Nav Item - Pages Collapse Menu -->
             <?php //only executes if user is admin, links to admin features
 
-			if ($_SESSION['admin']==true){?>
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Pages</span>
-                </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Admin Features:</h6>
-                        <a class="collapse-item" href="admin/users/index.php">Edit Users</a>
-                        <a class="collapse-item" href="admin/pages/index.php">Edit Pages</a>
-                       
+            if ($_SESSION['admin'] == true) { ?>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+                        <i class="fas fa-fw fa-folder"></i>
+                        <span>Pages</span>
+                    </a>
+                    <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <h6 class="collapse-header">Admin Features:</h6>
+                            <a class="collapse-item" href="admin/users/index.php">Edit Users</a>
+                            <a class="collapse-item" href="admin/pages/index.php">Edit Pages</a>
+
+                        </div>
                     </div>
-                </div>
-            </li>
-			<?php }?>
-            
+                </li>
+            <?php } ?>
+
 
             <!-- Nav Item - Tables -->
             <li class="nav-item active">
@@ -130,8 +112,8 @@ $userWorkoutData = getUserWorkoutData($userId);
                             <i class="fa fa-bars"></i>
                         </button>
                     </form>
-						
-					<h2>Gymify Fitness Application</h2>
+
+                    <h2>Gymify Fitness Application</h2>
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
 
@@ -161,27 +143,49 @@ $userWorkoutData = getUserWorkoutData($userId);
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION["email"];?></span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION["email"]; ?></span>
                                 <form method="POST">
-									                  <input type="submit" name="logout" value="logout">
-								                </form>
+                                    <input type="submit" name="logout" value="logout">
+                                </form>
                             </a>
-                         
+
 
                         </li>
-                            
+
 
 
                     </ul>
 
                 </nav>
                 <!-- End of Topbar -->
+                <?php
 
+                // Database connection
+                $host = 'localhost';
+                $name = 'final';
+                $user = 'root';
+                $pass = '';
+
+                $connection = new PDO("mysql:dbname=$name;host=$host", $user, $pass);
+
+                // Get user ID
+
+                $user_id = $_SESSION['ID'];
+                //$_SESSION['user_id'] = $user_id;
+                //die();
+                // Get workouts
+                $query = $connection->prepare('SELECT workouts.* FROM workouts JOIN users ON workouts.user_ID= ?');
+                //$query = $connection->prepare('SELECT workouts.* FROM workouts JOIN users ON users.ID = workouts.user_ID');
+                $query->execute([$user_id]);
+                //$query->execute();
+
+                ?>
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">Saved Workouts</h1>
+
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
 
@@ -191,28 +195,32 @@ $userWorkoutData = getUserWorkoutData($userId);
                                     <thead>
                                         <tr>
                                             <th>Workout Name</th>
-                                            <th>Exercises</th>
-                                            <th>Calorie Burn Goal</th>
                                             <th>Calories Burned</th>
+                                            <th>Calorie Burn Goal</th>
                                             <th>Time Worked Out (Minutes)</th>
+                                            <th>Type</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php $loopIndex = 0; ?>
-                                        <?php foreach ($userWorkoutData as $workout) : ?>
-                                            <tr>
-                                                <td><?php echo $workout['WorkoutName']; ?></td>
-                                                <td><?php echo $workout['Exercises']; ?></td>
-                                                <td><?php echo $workout['CalorieBurnGoal']; ?></td>
-                                                <td><?php echo $workout['CaloriesBurned']; ?></td>
-                                                <td><?php echo $workout['TimeWorkedOut']; ?></td>
-                                            </tr>
 
-                                            <?php $loopIndex++; ?>
-                                        <?php endforeach; ?>
+                                        <tr>
+                                            <?php while ($row = $query->fetch()) : ?>
+                                        <tr>
+                                            <td><?php echo $row['name']; ?></td>
+                                            <td><?php echo $row['cal_burned']; ?></td>
+                                            <td><?php echo $row['cal_goal']; ?></td>
+                                            <td><?php echo $row['time_worked']; ?></td>
+                                            <td><?php echo $row['type']; ?></td>
+
+                                        </tr>
+                                    <?php endwhile; ?>
+                                    </tr>
+
+
 
                                     <tbody>
                                         <a href="lib/edit.php">Edit Workout</a>
+                                        <? print_r($user_id) ?>
                                     </tbody>
                                 </table>
                             </div>
