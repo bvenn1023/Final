@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+<?php 
+require('users.php');
+if (!isset($_SESSION['email']) || $_SESSION['role']!=1) die('This is a private area, you are not allowed here');
 
-<?php
-session_start();
-require 'users.php';
-if ($_SESSION['admin']==true){?>
 
+if (isset ($_POST["logout"])){
+	session_unset();
+	session_destroy();
+	header("Location: ../../login.php");
+	exit;
+}
+
+?>
 
 <head>
 
@@ -50,7 +57,7 @@ if ($_SESSION['admin']==true){?>
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="index.php">
+                <a class="nav-link" href="../../index.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -74,13 +81,13 @@ if ($_SESSION['admin']==true){?>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Admin Features:</h6>
-                        <a class="collapse-item" href="admin/users/index.php">Edit Users</a>
-                        <a class="collapse-item" href="admin/pages/index.php">Edit Pages</a>
+                        <a class="collapse-item" href="index.php">Edit Users</a>
+                        <a class="collapse-item" href="../pages/index.php">Edit Pages</a>
                        
                     </div>
                 </div>
             </li>
-			<?php }?>
+			
             
 
             <!-- Nav Item - Tables -->
@@ -177,10 +184,14 @@ if ($_SESSION['admin']==true){?>
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
+											<th> Detail </th>
                                             <th>Email</th>
                                             <th>First Name</th>
                                             <th>Last Name</th>
                                             <th>Role</th>
+											<th>Operations</th>
+											
+											
                                             
                                         </tr>
                                     </thead>
@@ -188,7 +199,9 @@ if ($_SESSION['admin']==true){?>
                                         <?php  //printed from database in users.php?>
 										
                                             <?php printUsers();?>
-                                                
+											
+											
+											
                                            
                                             
                                         
@@ -247,21 +260,21 @@ if ($_SESSION['admin']==true){?>
     </div>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="assets/vendors/jquery/jquery.min.js"></script>
-    <script src="assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../../assets/vendors/jquery/jquery.min.js"></script>
+    <script src="../../assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
-    <script src="assets/vendors/jquery-easing/jquery.easing.min.js"></script>
+    <script src="../../assets/vendors/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="assets/js/sb-admin-2.min.js"></script>
+    <script src="../../assets/js/sb-admin-2.min.js"></script>
 
     <!-- Page level plugins -->
-    <script src="assets/vendors/datatables/jquery.dataTables.min.js"></script>
-    <script src="assets/vendors/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="../../assets/vendors/datatables/jquery.dataTables.min.js"></script>
+    <script src="../../assets/vendors/datatables/dataTables.bootstrap4.min.js"></script>
 
     <!-- Page level custom scripts -->
-    <script src="assets/js/demo/datatables-demo.js"></script>
+    <script src="../../assets/js/demo/datatables-demo.js"></script>
 
 </body>
 
