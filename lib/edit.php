@@ -2,28 +2,10 @@
 <html lang="en">
 
 <?php
-require_once('db.php');
+
 session_start();
-
-function getUserWorkoutData($userId)
-{
-    $filePath = $_SESSION['id'] . '.json';
-
-    if (file_exists($filePath)) {
-        $jsonData = file_get_contents($filePath);
-    } else {
-        $jsonData = '[]';
-        file_put_contents($filePath, $jsonData);
-    }
-
-    $data = json_decode($jsonData, true);
-
-    return $data;
-}
-$userId = $_SESSION['id'];
-$userWorkoutData = getUserWorkoutData($userId);
-
 ?>
+
 
 <head>
 
