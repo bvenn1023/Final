@@ -2,28 +2,10 @@
 <html lang="en">
 
 <?php
-require_once('db.php');
+
 session_start();
-
-function getUserWorkoutData($userId)
-{
-    $filePath = $_SESSION['id'] . '.json';
-
-    if (file_exists($filePath)) {
-        $jsonData = file_get_contents($filePath);
-    } else {
-        $jsonData = '[]';
-        file_put_contents($filePath, $jsonData);
-    }
-
-    $data = json_decode($jsonData, true);
-
-    return $data;
-}
-$userId = $_SESSION['id'];
-$userWorkoutData = getUserWorkoutData($userId);
-
 ?>
+
 
 <head>
 
@@ -179,29 +161,21 @@ $userWorkoutData = getUserWorkoutData($userId);
 
                 </nav>
                 <!-- End of Topbar -->
-                <?php
 
+                <?php
+                // Database connection
                 $host = 'localhost';
                 $name = 'final';
                 $user = 'root';
                 $pass = '';
+                $connection = new PDO("mysql:dbname=$name;host=$host", $user, $pass);
 
-                //Specify options
-                $opt = [
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                    PDO::ATTR_EMULATE_PREPARES => false
-                ];
-                $user_id = $_SESSION['user_id'];
+                // Get the logged-in user's ID
+                $user_ID = $_SESSION['user_id'];
 
-                // Connect to the database
-                $connection = new PDO("mysql:host=$host;dbname=$name;", $user, $pass);
-
-                // Insert new workout (same as before...)
-
-                // Get workouts for current user
-                $query = $connection->prepare('SELECT * FROM workouts WHERE user_id = ?');
-                $query->execute([$user_id]);
+                // Retrieve the user's workouts
+                $query = $connection->prepare('SELECT * FROM workouts WHERE user_ID');
+                $query->execute();
                 ?>
 
                 <!-- Begin Page Content -->
@@ -216,23 +190,29 @@ $userWorkoutData = getUserWorkoutData($userId);
                                     <thead>
                                         <tr>
                                             <th>Workout Name</th>
-                                            <th>Exercises</th>
-                                            <th>Calorie Burn Goal</th>
                                             <th>Calories Burned</th>
+                                            <th>Calorie Burn Goal</th>
                                             <th>Time Worked Out (Minutes)</th>
+                                            <th>Type</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-
-                                        <?php while ($row = $query->fetch()) : ?>
-                                            <tr>
-                                                <td><?php echo $row['name']; ?></td>
-                                                <td><?php echo $row['exercises']; ?></td>
-                                                <td><?php echo $row['cal_burned']; ?></td>
-                                                <td><?php echo $row['time_worked']; ?></td>
-                                            </tr>
-                                        <?php endwhile; ?>
-
+                                        <?php
+                                        while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                                            echo '<tr>';
+                                            echo '<form method="post" action="../tables.php">';
+                                            echo '<td><input type="text" name="name" value="' . $row['name'] . '"></td>';
+                                            echo '<td><input type="text" name="cal_burned" value="' . $row['cal_burned'] . '"></td>';
+                                            echo '<td><input type="text" name="cal_goal" value="' . $row['cal_goal'] . '"></td>';
+                                            echo '<td><input type="text" name="time_worked" value="' . $row['time_worked'] . '"></td>';
+                                            echo '<td><input type="text" name="type" value="' . $row['type'] . '"></td>';
+                                            echo '<input type="hidden" name="ID" value="' . $row['ID'] . '">';
+                                            echo '<td><input type="submit" value="Save"></td>';
+                                            echo '</form>';
+                                            echo '</tr>';
+                                        }
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -240,67 +220,70 @@ $userWorkoutData = getUserWorkoutData($userId);
                     </div>
                 </div>
 
-                <!-- /.container-fluid -->
 
-            </div>
-            <!-- End of Main Content -->
+</html>
 
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2020</span>
-                    </div>
-                </div>
-            </footer>
-            <!-- End of Footer -->
+</html>
 
-        </div>
-        <!-- End of Content Wrapper -->
+</html>
+<!-- End of Main Content -->
 
-    </div>
-    <!-- End of Page Wrapper -->
-
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.php">Logout</a>
-                </div>
-            </div>
+<!-- Footer -->
+<footer class="sticky-footer bg-white">
+    <div class="container my-auto">
+        <div class="copyright text-center my-auto">
+            <span>Copyright &copy; Your Website 2020</span>
         </div>
     </div>
+</footer>
+<!-- End of Footer -->
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="../assets/vendors/jquery/jquery.min.js"></script>
-    <script src="../assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+</div>
+<!-- End of Content Wrapper -->
 
-    <!-- Core plugin JavaScript-->
-    <script src="../assets/vendors/jquery-easing/jquery.easing.min.js"></script>
+</div>
+<!-- End of Page Wrapper -->
 
-    <!-- Custom scripts for all pages-->
-    <script src="../assets/js/sb-admin-2.min.js"></script>
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
 
-    <!-- Page level plugins -->
-    <script src="../assets/vendors/datatables/jquery.dataTables.min.js"></script>
-    <script src="../assets/vendors/datatables/dataTables.bootstrap4.min.js"></script>
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="login.php">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <!-- Page level custom scripts -->
-    <script src="../assets/js/demo/datatables-demo.js"></script>
+<!-- Bootstrap core JavaScript-->
+<script src="../assets/vendors/jquery/jquery.min.js"></script>
+<script src="../assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="../assets/vendors/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="../assets/js/sb-admin-2.min.js"></script>
+
+<!-- Page level plugins -->
+<script src="../assets/vendors/datatables/jquery.dataTables.min.js"></script>
+<script src="../assets/vendors/datatables/dataTables.bootstrap4.min.js"></script>
+
+<!-- Page level custom scripts -->
+<script src="../assets/js/demo/datatables-demo.js"></script>
 
 </body>
 
@@ -320,9 +303,7 @@ $userWorkoutData = getUserWorkoutData($userId);
 <!-- EDIT.PHP FOR TABLES.PHP -->
 
 <?php
-session_start();
 
-$userId = $_SESSION['id'];
 
 /* function getUserWorkoutData($userId)
 {
@@ -364,7 +345,7 @@ function deleteUserWorkoutData($userId, $index)
     }
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+/* if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['save_index'])) {
         // Handle save operation
         $workoutName = $_POST['workoutName'];
@@ -468,4 +449,4 @@ $userWorkoutData = getUserWorkoutData($userId);
     <a href="../tables.php">Return To Workouts</a>
 </body>
 
-</html>
+</html> */
