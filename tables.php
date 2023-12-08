@@ -37,7 +37,7 @@ session_start();
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../tables.php">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="tables.php">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -49,7 +49,7 @@ session_start();
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="../tables.php">
+                <a class="nav-link" href="index.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -171,14 +171,9 @@ session_start();
                 // Get user ID
 
                 $user_id = $_SESSION['ID'];
-                //$_SESSION['user_id'] = $user_id;
-                //die();
-                // Get workouts
-                $query = $connection->prepare('SELECT workouts.* FROM workouts JOIN users ON workouts.user_ID= ?');
-                //$query = $connection->prepare('SELECT workouts.* FROM workouts JOIN users ON users.ID = workouts.user_ID');
-                $query->execute([$user_id]);
-                //$query->execute();
 
+                $query = $connection->prepare('SELECT workouts.* FROM workouts JOIN users ON workouts.user_ID= ?');
+                $query->execute([$user_id]);
                 ?>
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
@@ -198,29 +193,33 @@ session_start();
                                             <th>Calories Burned</th>
                                             <th>Calorie Burn Goal</th>
                                             <th>Time Worked Out (Minutes)</th>
+                                            <th>Date</th>
                                             <th>Type</th>
                                         </tr>
                                     </thead>
                                     <tbody>
 
-                                        <tr>
-                                            <?php while ($row = $query->fetch()) : ?>
-                                        <tr>
-                                            <td><?php echo $row['name']; ?></td>
-                                            <td><?php echo $row['cal_burned']; ?></td>
-                                            <td><?php echo $row['cal_goal']; ?></td>
-                                            <td><?php echo $row['time_worked']; ?></td>
-                                            <td><?php echo $row['type']; ?></td>
-
+                                        <?php
+                                        $row = $query->fetch(PDO::FETCH_ASSOC);
+                                        if ($row) {
+                                            echo '<tr>';
+                                            echo '<td>' . $row['name'] . '</td>';
+                                            echo '<td>' . $row['cal_burned'] . '</td>';
+                                            echo '<td>' . $row['cal_goal'] . '</td>';
+                                            echo '<td>' . $row['time_worked'] . '</td>';
+                                            echo '<td>' . $row['date'] . '</td>';
+                                            echo '<td>' . $row['type'] . '</td>';
+                                            echo '</tr>';
+                                        } else {
+                                            echo 'No workouts found';
+                                        }
+                                        ?>
                                         </tr>
-                                    <?php endwhile; ?>
-                                    </tr>
 
 
 
                                     <tbody>
                                         <a href="lib/edit.php">Edit Workout</a>
-                                        <? print_r($user_id) ?>
                                     </tbody>
                                 </table>
                             </div>
