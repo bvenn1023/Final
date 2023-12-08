@@ -84,7 +84,7 @@ session_start();
 
             <!-- Nav Item - Tables -->
             <li class="nav-item active">
-                <a class="nav-link" href="../../Final/../index.php">
+                <a class="nav-link" href="../tables.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Workouts</span></a>
             </li>
@@ -171,61 +171,86 @@ session_start();
                 $connection = new PDO("mysql:dbname=$name;host=$host", $user, $pass);
 
                 // Get the logged-in user's ID
-                $user_ID = $_SESSION['user_id'];
-
+                $user_id = $_SESSION['ID'];
+                //$user_id = 13;
                 // Retrieve the user's workouts
-                $query = $connection->prepare('SELECT * FROM workouts WHERE user_ID');
-                $query->execute();
+                $query = $connection->prepare('SELECT workouts.* FROM workouts JOIN users ON workouts.user_ID= ?');
+                $query->execute([$user_id]);
                 ?>
 
                 <!-- Begin Page Content -->
-                <div class="container-fluid">
-                    <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Saved Workouts</h1>
-                    <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Workout Name</th>
-                                            <th>Calories Burned</th>
-                                            <th>Calorie Burn Goal</th>
-                                            <th>Time Worked Out (Minutes)</th>
-                                            <th>Type</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                                            echo '<tr>';
-                                            echo '<form method="post" action="../tables.php">';
-                                            echo '<td><input type="text" name="name" value="' . $row['name'] . '"></td>';
-                                            echo '<td><input type="text" name="cal_burned" value="' . $row['cal_burned'] . '"></td>';
-                                            echo '<td><input type="text" name="cal_goal" value="' . $row['cal_goal'] . '"></td>';
-                                            echo '<td><input type="text" name="time_worked" value="' . $row['time_worked'] . '"></td>';
-                                            echo '<td><input type="text" name="type" value="' . $row['type'] . '"></td>';
-                                            echo '<input type="hidden" name="ID" value="' . $row['ID'] . '">';
-                                            echo '<td><input type="submit" value="Save"></td>';
-                                            echo '</form>';
-                                            echo '</tr>';
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+                <!-- Display the user's workout information -->
+                <form method="post" action="saveWorkoutData.php" id="workoutForm">
+                    <div id="errorMessages" style="color: red;"></div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Workout Name</th>
+                                <th>Calories Burned</th>
+                                <th>Calorie Burn Goal</th>
+                                <th>Time Worked Out (Minutes)</th>
+                                <th>Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $row = $query->fetch(PDO::FETCH_ASSOC);
+                            if ($row) {
+                                echo '<tr>';
+                                echo '<td><input type="text" name="name[]" value="' . htmlspecialchars($row['name']) . '" maxlength="20"></td>';
+                                echo '<td><input type="text" name="cal_burned[]" value="' . $row['cal_burned'] . '" pattern="\d{1,4}" title="Enter up to 4 numbers"></td>';
+                                echo '<td><input type="text" name="cal_goal[]" value="' . $row['cal_goal'] . '" pattern="\d{1,4}" title="Enter up to 4 numbers"></td>';
+                                echo '<td><input type="text" name="time_worked[]" value="' . $row['time_worked'] . '" pattern="\d{1,2}" title="Enter up to 2 numbers"></td>';
+                                echo '<td><input type="text" name="type[]" value="' . $row['type'] . '" maxlength="20" pattern="\d{1,20}" title="Enter up to 20 numbers"></td>';
+                                echo '<input type="hidden" name="ID[]" value="' . $row['ID'] . '">';
+                                echo '</tr>';
+                            } else {
+                                echo 'No workouts found';
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                    <input type="submit" value="Save" onclick="return validateForm();">
+                </form>
+
+                <script>
+                    function validateForm() {
+                        $('#errorMessages').html('');
+                        $('input').removeClass('invalid');
+
+                        var isValid = true;
+
+                        $('input[name^="cal_burned"], input[name^="cal_goal"], input[name^="time_worked"], input[name^="type"]').each(function() {
+                            if (!this.checkValidity()) {
+                                isValid = false;
+                                // Display specific error messages for each input
+                                $('#errorMessages').append('<p>' + $(this).attr('title') + '</p>');
+                                // Highlight the invalid input field
+                                $(this).addClass('invalid');
+                            }
+                        });
+
+                        return isValid;
+                    }
+                </script>
+
+                <style>
+                    .invalid {
+                        border: 2px solid red;
+                    }
+                </style>
+
+
+
+
+
+
 
 
 </html>
 
-</html>
-
-</html>
 <!-- End of Main Content -->
 
 <!-- Footer -->
@@ -238,11 +263,7 @@ session_start();
 </footer>
 <!-- End of Footer -->
 
-</div>
-<!-- End of Content Wrapper -->
 
-</div>
-<!-- End of Page Wrapper -->
 
 <!-- Scroll to Top Button-->
 <a class="scroll-to-top rounded" href="#page-top">
@@ -262,7 +283,7 @@ session_start();
             <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="login.php">Logout</a>
+                <a class="btn btn-primary" href="../login.php">Logout</a>
             </div>
         </div>
     </div>
@@ -300,153 +321,3 @@ session_start();
 
 
 
-<!-- EDIT.PHP FOR TABLES.PHP -->
-
-<?php
-
-
-/* function getUserWorkoutData($userId)
-{
-    $filePath = $userId . '.json';
-
-    if (file_exists($filePath)) {
-        $jsonData = file_get_contents($filePath);
-        if (empty($jsonData)) {
-            $jsonData = "[]";
-            file_put_contents($filePath, $jsonData);
-        }
-    } else {
-        $jsonData = "[]";
-        file_put_contents($filePath, $jsonData);
-    }
-
-    $data = json_decode($jsonData, true);
-
-    return $data;
-}
- */
-function saveUserWorkoutData($userId, $data)
-{
-    $filePath = $userId . '.json';
-    $jsonData = json_encode($data, JSON_PRETTY_PRINT);
-    file_put_contents($filePath, $jsonData);
-}
-
-function deleteUserWorkoutData($userId, $index)
-{
-
-    $filePath = $userId . '.json';
-    $jsonData = file_get_contents($filePath);
-    $data = json_decode($jsonData, true);
-
-    if (isset($data[$index])) {
-        array_splice($data, $index, 1);
-        saveUserWorkoutData($userId, $data);
-    }
-}
-
-/* if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['save_index'])) {
-        // Handle save operation
-        $workoutName = $_POST['workoutName'];
-        $exercises = $_POST['exercises'];
-        $calorieBurnGoal = $_POST['calorieBurnGoal'];
-        $caloriesBurned = $_POST['caloriesBurned'];
-        $timeWorkedOut = $_POST['timeWorkedOut'];
-
-        $updatedWorkoutData = [
-            'WorkoutName' => $workoutName,
-            'Exercises' => $exercises,
-            'CalorieBurnGoal' => $calorieBurnGoal,
-            'CaloriesBurned' => $caloriesBurned,
-            'TimeWorkedOut' => $timeWorkedOut,
-        ];
-
-        $userWorkoutData = getUserWorkoutData($userId);
-        $userWorkoutData[] = $updatedWorkoutData;
-        saveUserWorkoutData($userId, $userWorkoutData);
-    }
-
-    if (isset($_POST['delete_index'])) {
-        // Handle delete operation
-        $deleteIndex = $_POST['delete_index'];
-        deleteUserWorkoutData($userId, $deleteIndex);
-    }
-}
-
-$userWorkoutData = getUserWorkoutData($userId);
-?>
-
-
-
-<!DOCTYPE html>
-<html>
-
-<head>
-    <title>Workout Tracker</title>
-</head>
-
-<body>
-    <h1>Workout Tracker</h1>
-    <h2>Welcome, <?php echo $_SESSION['email']; ?>!</h2>
-    <h3>Your Workout Data:</h3>
-    <ul>
-        <?php if (!empty($userWorkoutData)) : ?>
-            <?php foreach ($userWorkoutData as $index => $workout) : ?>
-                <li>
-                    <form method="post">
-                        <label for="workoutName">Workout Name:</label>
-                        <input type="text" name="workoutName" value="<?php echo isset($workout['WorkoutName']) ? $workout['WorkoutName'] : ''; ?>" required><br>
-
-                        <label for="exercises">Exercises:</label>
-                        <input type="text" name="exercises" value="<?php echo isset($workout['Exercises']) ? $workout['Exercises'] : ''; ?>" required><br>
-
-                        <label for="calorieBurnGoal">Calorie Burn Goal:</label>
-                        <input type="number" name="calorieBurnGoal" value="<?php echo isset($workout['CalorieBurnGoal']) ? $workout['CalorieBurnGoal'] : ''; ?>" required><br>
-
-                        <label for="caloriesBurned">Calories Burned:</label>
-                        <input type="number" name="caloriesBurned" value="<?php echo isset($workout['CaloriesBurned']) ? $workout['CaloriesBurned'] : ''; ?>" required><br>
-
-                        <label for="timeWorkedOut">Time Worked Out (minutes):</label>
-                        <input type="number" name="timeWorkedOut" value="<?php echo isset($workout['TimeWorkedOut']) ? $workout['TimeWorkedOut'] : ''; ?>" required><br>
-
-                        <button type="submit" name="save_index" value="<?php echo $index; ?>">Save</button>
-                    </form>
-
-                    <form method="post">
-                        <input type="hidden" name="delete_index" value="<?php echo $index; ?>">
-                        <button type="submit" name="delete">Delete</button>
-                    </form>
-                </li>
-            <?php endforeach; ?>
-        <?php else : ?>
-            <li>
-                <form method="post">
-                    <label for="workoutName">Workout Name:</label>
-                    <input type="text" name="workoutName" required><br>
-
-                    <label for="exercises">Exercises:</label>
-                    <input type="text" name="exercises" required><br>
-
-                    <label for="calorieBurnGoal">Calorie Burn Goal:</label>
-                    <input type="number" name="calorieBurnGoal" required><br>
-
-                    <label for="caloriesBurned">Calories Burned:</label>
-                    <input type="number" name="caloriesBurned" required><br>
-
-                    <label for="timeWorkedOut">Time Worked Out (minutes):</label>
-                    <input type="number" name="timeWorkedOut" required><br>
-
-                    <button type="submit" name="save_index" value="new">Save</button>
-                </form>
-            </li>
-        <?php endif; ?>
-
-
-
-
-    </ul>
-    <a href="../tables.php">Return To Workouts</a>
-</body>
-
-</html> */

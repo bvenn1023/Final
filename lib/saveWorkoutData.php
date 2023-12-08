@@ -17,14 +17,14 @@ session_start();
     <title>SB Admin 2 - Tables</title>
 
     <!-- Custom fonts for this template -->
-    <link href="assets/vendors/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="../assets/vendors/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="assets/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="../assets/css/sb-admin-2.min.css" rel="stylesheet">
 
     <!-- Custom styles for this page -->
-    <link href="assets/vendors/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="../assets/vendors/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
 </head>
 
@@ -37,7 +37,7 @@ session_start();
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="tables.php">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../tables.php">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -49,7 +49,7 @@ session_start();
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="index.php">
+                <a class="nav-link" href="../index.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -70,8 +70,8 @@ session_start();
                     <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Admin Features:</h6>
-                            <a class="collapse-item" href="admin/users/index.php">Edit Users</a>
-                            <a class="collapse-item" href="admin/pages/index.php">Edit Pages</a>
+                            <a class="collapse-item" href="../admin/users/index.php">Edit Users</a>
+                            <a class="collapse-item" href="../admin/pages/index.php">Edit Pages</a>
 
                         </div>
                     </div>
@@ -81,7 +81,7 @@ session_start();
 
             <!-- Nav Item - Tables -->
             <li class="nav-item active">
-                <a class="nav-link" href="tables.php">
+                <a class="nav-link" href="../tables.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Workouts</span></a>
             </li>
@@ -157,93 +157,75 @@ session_start();
                     </ul>
 
                 </nav>
-                <!-- End of Topbar -->
+
                 <?php
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    // Database connection
+                    $host = 'localhost';
+                    $name = 'final';
+                    $user = 'root';
+                    $pass = '';
 
-                // Database connection
-                $host = 'localhost';
-                $name = 'final';
-                $user = 'root';
-                $pass = '';
+                    try {
+                        $connection = new PDO("mysql:dbname=$name;host=$host", $user, $pass);
+                        $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-                $connection = new PDO("mysql:dbname=$name;host=$host", $user, $pass);
+                        // Get the data from the POST request
+                        $workoutID = $_POST['ID'];
+                        $name = $_POST['name'];
+                        $cal_burned = $_POST['cal_burned'];
+                        $cal_goal = $_POST['cal_goal'];
+                        $time_worked = $_POST['time_worked'];
+                        $type = $_POST['type'];
 
-                // Get user ID
+                        // If $workoutID is an array, you might want to loop through the array and update each record
+                        if (is_array($workoutID)) {
+                            foreach ($workoutID as $key => $id) {
+                                $query = $connection->prepare('UPDATE workouts SET name=?, cal_burned=?, cal_goal=?, time_worked=?, type=? WHERE ID=?');
+                                $query->execute([$name[$key], $cal_burned[$key], $cal_goal[$key], $time_worked[$key], $type[$key], $id]);
+                            }
+                        } else {
+                            // Handle the case when $workoutID is not an array (single record update)
+                            $query = $connection->prepare('UPDATE workouts SET name=?, cal_burned=?, cal_goal=?, time_worked=?, type=? WHERE ID=?');
+                            $query->execute([$name, $cal_burned, $cal_goal, $time_worked, $type, $workoutID]);
+                        }
 
-                $user_id = $_SESSION['ID'];
-
-                $query = $connection->prepare('SELECT workouts.* FROM workouts JOIN users ON workouts.user_ID= ?');
-                $query->execute([$user_id]);
+                        // Return a success message
+                        echo '<div class="alert alert-success" role="alert">';
+                        echo 'Workout updated successfully!';
+                        echo '</div>';
+                    } catch (PDOException $e) {
+                        // Handle database connection or query errors
+                        echo '<div class="alert alert-danger" role="alert">';
+                        echo 'Error: ' . $e->getMessage();
+                        echo '</div>';
+                    } finally {
+                        // Close the database connection
+                        $connection = null;
+                    }
+                } else {
+                    // Handle invalid request method
+                    echo '<div class="alert alert-danger" role="alert">';
+                    echo 'Invalid request method';
+                    echo '</div>';
+                }
                 ?>
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
-
-                    <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Saved Workouts</h1>
-
-                    <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Workout Name</th>
-                                            <th>Calories Burned</th>
-                                            <th>Calorie Burn Goal</th>
-                                            <th>Time Worked Out (Minutes)</th>
-                                            <th>Date</th>
-                                            <th>Type</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                        <?php
-                                        $row = $query->fetch(PDO::FETCH_ASSOC);
-                                        if ($row) {
-                                            echo '<tr>';
-                                            echo '<td>' . $row['name'] . '</td>';
-                                            echo '<td>' . $row['cal_burned'] . '</td>';
-                                            echo '<td>' . $row['cal_goal'] . '</td>';
-                                            echo '<td>' . $row['time_worked'] . '</td>';
-                                            echo '<td>' . $row['date'] . '</td>';
-                                            echo '<td>' . $row['type'] . '</td>';
-                                            echo '</tr>';
-                                        } else {
-                                            echo 'No workouts found';
-                                        }
-                                        ?>
-                                        </tr>
-
-
-
-                                    <tbody>
-                                        <a href="lib/edit.php">Edit Workout</a>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <!-- /.container-fluid -->
 
             </div>
-            <!-- End of Main Content -->
-
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2020</span>
-                    </div>
-                </div>
-            </footer>
-            <!-- End of Footer -->
-
         </div>
-        <!-- End of Content Wrapper -->
+
+    </div>
+    <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+                <span>Copyright &copy; Your Website 2020</span>
+            </div>
+        </div>
+    </footer>
+    <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
 
     </div>
     <!-- End of Page Wrapper -->
@@ -266,28 +248,28 @@ session_start();
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.php">Logout</a>
+                    <a class="btn btn-primary" href="../login.php">Logout</a>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="assets/vendors/jquery/jquery.min.js"></script>
-    <script src="assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/vendors/jquery/jquery.min.js"></script>
+    <script src="../assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
-    <script src="assets/vendors/jquery-easing/jquery.easing.min.js"></script>
+    <script src="../assets/vendors/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="assets/js/sb-admin-2.min.js"></script>
+    <script src="../assets/js/sb-admin-2.min.js"></script>
 
     <!-- Page level plugins -->
-    <script src="assets/vendors/datatables/jquery.dataTables.min.js"></script>
-    <script src="assets/vendors/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="../assets/vendors/datatables/jquery.dataTables.min.js"></script>
+    <script src="../assets/vendors/datatables/dataTables.bootstrap4.min.js"></script>
 
     <!-- Page level custom scripts -->
-    <script src="assets/js/demo/datatables-demo.js"></script>
+    <script src="../assets/js/demo/datatables-demo.js"></script>
 
 </body>
 
