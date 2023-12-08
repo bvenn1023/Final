@@ -3,7 +3,7 @@
 
 <?php require_once('functions.php');
 
-if (!isset($_SESSION['email'])) die('This is a private area, you are not allowed here');
+if (!isset($_SESSION['email'])) header("Location: redirect.php");
 
 
 if (isset ($_POST["logout"])){

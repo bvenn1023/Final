@@ -3,7 +3,7 @@
 
 <?php
 require 'users.php';
-if (!isset($_SESSION['email']) || $_SESSION['role']!=1) die('This is a private area, you are not allowed here');
+
 
 
 if (isset ($_POST["logout"])){
