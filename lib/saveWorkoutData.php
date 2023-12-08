@@ -6,7 +6,6 @@
 session_start();
 ?>
 
-
 <head>
 
     <meta charset="utf-8">
@@ -27,9 +26,7 @@ session_start();
     <!-- Custom styles for this page -->
     <link href="../assets/vendors/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
-
 </head>
-
 
 <body id="page-top">
 
@@ -40,7 +37,7 @@ session_start();
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../index.php">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../tables.php">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -73,8 +70,8 @@ session_start();
                     <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Admin Features:</h6>
-                            <a class="collapse-item" href="admin/users/../index.php">Edit Users</a>
-                            <a class="collapse-item" href="admin/pages/../index.php">Edit Pages</a>
+                            <a class="collapse-item" href="../admin/users/index.php">Edit Users</a>
+                            <a class="collapse-item" href="../admin/pages/index.php">Edit Pages</a>
 
                         </div>
                     </div>
@@ -160,164 +157,120 @@ session_start();
                     </ul>
 
                 </nav>
-                <!-- End of Topbar -->
 
                 <?php
-                // Database connection
-                $host = 'localhost';
-                $name = 'final';
-                $user = 'root';
-                $pass = '';
-                $connection = new PDO("mysql:dbname=$name;host=$host", $user, $pass);
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    // Database connection
+                    $host = 'localhost';
+                    $name = 'final';
+                    $user = 'root';
+                    $pass = '';
 
-                // Get the logged-in user's ID
-                $user_id = $_SESSION['ID'];
-                //$user_id = 13;
-                // Retrieve the user's workouts
-                $query = $connection->prepare('SELECT workouts.* FROM workouts JOIN users ON workouts.user_ID= ?');
-                $query->execute([$user_id]);
+                    try {
+                        $connection = new PDO("mysql:dbname=$name;host=$host", $user, $pass);
+                        $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+                        // Get the data from the POST request
+                        $workoutID = $_POST['ID'];
+                        $name = $_POST['name'];
+                        $cal_burned = $_POST['cal_burned'];
+                        $cal_goal = $_POST['cal_goal'];
+                        $time_worked = $_POST['time_worked'];
+                        $type = $_POST['type'];
+
+                        // If $workoutID is an array, you might want to loop through the array and update each record
+                        if (is_array($workoutID)) {
+                            foreach ($workoutID as $key => $id) {
+                                $query = $connection->prepare('UPDATE workouts SET name=?, cal_burned=?, cal_goal=?, time_worked=?, type=? WHERE ID=?');
+                                $query->execute([$name[$key], $cal_burned[$key], $cal_goal[$key], $time_worked[$key], $type[$key], $id]);
+                            }
+                        } else {
+                            // Handle the case when $workoutID is not an array (single record update)
+                            $query = $connection->prepare('UPDATE workouts SET name=?, cal_burned=?, cal_goal=?, time_worked=?, type=? WHERE ID=?');
+                            $query->execute([$name, $cal_burned, $cal_goal, $time_worked, $type, $workoutID]);
+                        }
+
+                        // Return a success message
+                        echo '<div class="alert alert-success" role="alert">';
+                        echo 'Workout updated successfully!';
+                        echo '</div>';
+                    } catch (PDOException $e) {
+                        // Handle database connection or query errors
+                        echo '<div class="alert alert-danger" role="alert">';
+                        echo 'Error: ' . $e->getMessage();
+                        echo '</div>';
+                    } finally {
+                        // Close the database connection
+                        $connection = null;
+                    }
+                } else {
+                    // Handle invalid request method
+                    echo '<div class="alert alert-danger" role="alert">';
+                    echo 'Invalid request method';
+                    echo '</div>';
+                }
                 ?>
 
-                <!-- Begin Page Content -->
-                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-                <!-- Display the user's workout information -->
-                <form method="post" action="saveWorkoutData.php" id="workoutForm">
-                    <div id="errorMessages" style="color: red;"></div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Workout Name</th>
-                                <th>Calories Burned</th>
-                                <th>Calorie Burn Goal</th>
-                                <th>Time Worked Out (Minutes)</th>
-                                <th>Type</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $row = $query->fetch(PDO::FETCH_ASSOC);
-                            if ($row) {
-                                echo '<tr>';
-                                echo '<td><input type="text" name="name[]" value="' . htmlspecialchars($row['name']) . '" maxlength="20"></td>';
-                                echo '<td><input type="text" name="cal_burned[]" value="' . $row['cal_burned'] . '" pattern="\d{1,4}" title="Enter up to 4 numbers"></td>';
-                                echo '<td><input type="text" name="cal_goal[]" value="' . $row['cal_goal'] . '" pattern="\d{1,4}" title="Enter up to 4 numbers"></td>';
-                                echo '<td><input type="text" name="time_worked[]" value="' . $row['time_worked'] . '" pattern="\d{1,2}" title="Enter up to 2 numbers"></td>';
-                                echo '<td><input type="text" name="type[]" value="' . $row['type'] . '" maxlength="20" pattern="\d{1,20}" title="Enter up to 20 numbers"></td>';
-                                echo '<input type="hidden" name="ID[]" value="' . $row['ID'] . '">';
-                                echo '</tr>';
-                            } else {
-                                echo 'No workouts found';
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                    <input type="submit" value="Save" onclick="return validateForm();">
-                </form>
-
-                <script>
-                    function validateForm() {
-                        $('#errorMessages').html('');
-                        $('input').removeClass('invalid');
-
-                        var isValid = true;
-
-                        $('input[name^="cal_burned"], input[name^="cal_goal"], input[name^="time_worked"], input[name^="type"]').each(function() {
-                            if (!this.checkValidity()) {
-                                isValid = false;
-                                // Display specific error messages for each input
-                                $('#errorMessages').append('<p>' + $(this).attr('title') + '</p>');
-                                // Highlight the invalid input field
-                                $(this).addClass('invalid');
-                            }
-                        });
-
-                        return isValid;
-                    }
-                </script>
-
-                <style>
-                    .invalid {
-                        border: 2px solid red;
-                    }
-                </style>
-
-
-
-
-
-
-
-
-</html>
-
-<!-- End of Main Content -->
-
-<!-- Footer -->
-<footer class="sticky-footer bg-white">
-    <div class="container my-auto">
-        <div class="copyright text-center my-auto">
-            <span>Copyright &copy; Your Website 2020</span>
-        </div>
-    </div>
-</footer>
-<!-- End of Footer -->
-
-
-
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a>
-
-<!-- Logout Modal-->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
             </div>
-            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="../login.php">Logout</a>
+        </div>
+
+    </div>
+    <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+                <span>Copyright &copy; Your Website 2020</span>
+            </div>
+        </div>
+    </footer>
+    <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="../login.php">Logout</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Bootstrap core JavaScript-->
-<script src="../assets/vendors/jquery/jquery.min.js"></script>
-<script src="../assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap core JavaScript-->
+    <script src="../assets/vendors/jquery/jquery.min.js"></script>
+    <script src="../assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-<!-- Core plugin JavaScript-->
-<script src="../assets/vendors/jquery-easing/jquery.easing.min.js"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="../assets/vendors/jquery-easing/jquery.easing.min.js"></script>
 
-<!-- Custom scripts for all pages-->
-<script src="../assets/js/sb-admin-2.min.js"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="../assets/js/sb-admin-2.min.js"></script>
 
-<!-- Page level plugins -->
-<script src="../assets/vendors/datatables/jquery.dataTables.min.js"></script>
-<script src="../assets/vendors/datatables/dataTables.bootstrap4.min.js"></script>
+    <!-- Page level plugins -->
+    <script src="../assets/vendors/datatables/jquery.dataTables.min.js"></script>
+    <script src="../assets/vendors/datatables/dataTables.bootstrap4.min.js"></script>
 
-<!-- Page level custom scripts -->
-<script src="../assets/js/demo/datatables-demo.js"></script>
+    <!-- Page level custom scripts -->
+    <script src="../assets/js/demo/datatables-demo.js"></script>
 
 </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
