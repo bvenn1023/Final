@@ -3,7 +3,7 @@
 <?php 
 session_start();
 
-if (!isset($_SESSION['email']) || $_SESSION['role']!=1)die('This is a private area, you are not allowed here');
+if (!isset($_SESSION['email']) || $_SESSION['role']!=1)header("Location: ../redirect.php");
 
 
 if (isset ($_POST["logout"])){
