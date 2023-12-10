@@ -20,8 +20,8 @@ function createUser(){
 				PDO::ATTR_EMULATE_PREPARES => false
 			];
 			$connection=new PDO('mysql:host='.$host.';dbname='.$name.';charset=utf8mb4',$user,$pass,$opt);
-			$query=$connection->prepare("INSERT INTO users (email, password, firstname, lastname, role) VALUES (?, ?, ?, ?, ?)");
-		    $query->execute([$_POST["email"], $_POST["password"], $_POST["firstname"], $_POST["lastname"], 0]);
+			$query=$connection->prepare("INSERT INTO users (email, password, firstname, lastname, height,weight,age, role) VALUES (?, ?, ?, ?, ?,?,?,?)");
+		    $query->execute([$_POST["email"], $_POST["password"], $_POST["firstname"], $_POST["lastname"],$_POST["height"],$_POST["weight"],$_POST["age"], 0]);
 			
   
             header("Location: login.php");
@@ -29,7 +29,42 @@ function createUser(){
         }
     }
 }
-createUser();
+$currentYear = date("Y");
+//input validation
+if (
+    isset($_POST["firstname"]) &&
+    isset($_POST["lastname"]) &&
+    isset($_POST["email"]) &&
+    isset($_POST["password"]) &&
+    isset($_POST["height"]) &&
+    isset($_POST["weight"]) &&
+    isset($_POST["birthday"]) &&
+    isset($_POST["birthmonth"]) &&
+    isset($_POST["birthyear"]) &&
+    isset($_POST["password2"])
+) {
+    if (!is_string($_POST["firstname"]) || !is_string($_POST["lastname"])) {
+        echo ("Please enter your name");
+    } elseif (!is_int((int)$_POST["height"]) || !is_int((int)$_POST["weight"])) {
+        echo ("Please enter height and weight as whole numbers");
+    } elseif (
+        (int)$_POST["birthmonth"] < 1 || (int)$_POST["birthmonth"] > 12 ||
+        (int)$_POST["birthday"] < 1 || (int)$_POST["birthday"] > 31 ||
+        (int)$_POST["birthyear"] < 1900 || (int)$_POST["birthyear"] > $currentYear
+    ) {
+        echo("Please enter age information in the form MM, DD, YYYY");
+    } elseif ($_POST["password"] != $_POST["password2"]) {
+        echo("Passwords don't match");
+    } else {
+        $_POST["age"] = $_POST["birthyear"] . "-" . $_POST["birthmonth"] . "-" . $_POST["birthday"];
+        createUser();
+    }
+} 
+
+
+
+
+
 ?>
 <html lang="en">
 
@@ -85,13 +120,38 @@ createUser();
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="password" class="form-control form-control-user"
+                                        <input type="password" class="form-control form-control-user" name="password"
                                             id="exampleInputPassword" placeholder="Password">
                                     </div>
                                     <div class="col-sm-6">
-                                        <input type="password" class="form-control form-control-user" name="password"
+                                        <input type="password" class="form-control form-control-user" name="password2"
                                             id="exampleRepeatPassword" placeholder="Repeat Password">
                                     </div>
+                                </div>
+								 <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="number" class="form-control form-control-user" name="height"
+                                            id="exampleInputPassword" placeholder="height (inches)">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="number" class="form-control form-control-user" name="weight"
+                                            id="exampleRepeatPassword" placeholder="weight (lbs)">
+                                    </div>
+                                </div>
+								 <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="number" class="form-control form-control-user" name="birthmonth"
+                                            id="exampleInputPassword" placeholder="Birth month (MM) ">
+                                    </div>
+									<div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="number" class="form-control form-control-user" name="birthday"
+                                            id="exampleInputPassword" placeholder="birth day (DD)">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="number" class="form-control form-control-user" name="birthyear"
+                                            id="exampleRepeatPassword" placeholder="birth year (YYYY) ">
+                                    </div>
+                                    
                                 </div>
                                <button type="submit" >Create Account</button>
                  
