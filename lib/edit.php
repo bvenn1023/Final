@@ -162,21 +162,7 @@ session_start();
                 </nav>
                 <!-- End of Topbar -->
 
-                <?php
-                // Database connection
-                $host = 'localhost';
-                $name = 'final';
-                $user = 'root';
-                $pass = '';
-                $connection = new PDO("mysql:dbname=$name;host=$host", $user, $pass);
-
-                // Get the logged-in user's ID
-                $user_id = $_SESSION['ID'];
-                //$user_id = 13;
-                // Retrieve the user's workouts
-                $query = $connection->prepare('SELECT workouts.* FROM workouts JOIN users ON workouts.user_ID= ?');
-                $query->execute([$user_id]);
-                ?>
+                
 
                 <!-- Begin Page Content -->
                 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -185,62 +171,86 @@ session_start();
                 <form method="post" action="saveWorkoutData.php" id="workoutForm">
                     <div id="errorMessages" style="color: red;"></div>
                     <table>
-                        <thead>
-                            <tr>
-                                <th>Workout Name</th>
-                                <th>Calories Burned</th>
-                                <th>Calorie Burn Goal</th>
-                                <th>Time Worked Out (Minutes)</th>
-                                <th>Type</th>
-                            </tr>
-                        </thead>
+                        
                         <tbody>
                             <?php
-                            $row = $query->fetch(PDO::FETCH_ASSOC);
-                            if ($row) {
-                                echo '<tr>';
-                                echo '<td><input type="text" name="name[]" value="' . htmlspecialchars($row['name']) . '" maxlength="20"></td>';
-                                echo '<td><input type="text" name="cal_burned[]" value="' . $row['cal_burned'] . '" pattern="\d{1,4}" title="Enter up to 4 numbers"></td>';
-                                echo '<td><input type="text" name="cal_goal[]" value="' . $row['cal_goal'] . '" pattern="\d{1,4}" title="Enter up to 4 numbers"></td>';
-                                echo '<td><input type="text" name="time_worked[]" value="' . $row['time_worked'] . '" pattern="\d{1,2}" title="Enter up to 2 numbers"></td>';
-                                echo '<td><input type="text" name="type[]" value="' . $row['type'] . '" maxlength="20" pattern="\d{1,20}" title="Enter up to 20 numbers"></td>';
-                                echo '<input type="hidden" name="ID[]" value="' . $row['ID'] . '">';
-                                echo '</tr>';
-                            } else {
-                                echo 'No workouts found';
-                            }
+                            // Database connection
+                            $host = 'localhost';
+                            $name = 'final';
+                            $user = 'root';
+                            $pass = '';
+                            $connection = new PDO("mysql:dbname=$name;host=$host", $user, $pass);
+
+                            // Get the logged-in user's ID
+                            $user_id = $_SESSION['ID'];
+                            //$user_id = 13;
+                            // Retrieve the user's workouts
+                            $query = $connection->prepare('SELECT workouts.* FROM workouts JOIN users ON workouts.user_ID= ?');
+                            $query->execute([$user_id]);
                             ?>
-                        </tbody>
-                    </table>
-                    <input type="submit" value="Save" onclick="return validateForm();">
-                </form>
 
-                <script>
-                    function validateForm() {
-                        $('#errorMessages').html('');
-                        $('input').removeClass('invalid');
+                            <!-- Begin Page Content -->
+                            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-                        var isValid = true;
+                            <!-- Display the user's workout information -->
+                            <form method="post" action="saveWorkoutData.php" id="workoutForm">
+                                <div id="errorMessages" style="color: red;"></div>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Workout Name</th>
+                                            <th>Calories Burned</th>
+                                            <th>Calorie Burn Goal</th>
+                                            <th>Time Worked Out (Minutes)</th>
+                                            <th>Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                                            echo '<tr>';
+                                            echo '<td><input type="text" name="name[]" value="' . htmlspecialchars($row['name']) . '" maxlength="20"></td>';
+                                            echo '<td><input type="text" name="cal_burned[]" value="' . $row['cal_burned'] . '" pattern="\d{1,4}" title="Enter up to 4 numbers"></td>';
+                                            echo '<td><input type="text" name="cal_goal[]" value="' . $row['cal_goal'] . '" pattern="\d{1,4}" title="Enter up to 4 numbers"></td>';
+                                            echo '<td><input type="text" name="time_worked[]" value="' . $row['time_worked'] . '" pattern="\d{1,2}" title="Enter up to 2 numbers"></td>';
+                                            echo '<td><input type="text" name="type[]" value="' . $row['type'] . '" maxlength="20" pattern="\d{1,20}" title="Enter up to 20 numbers"></td>';
+                                            echo '<input type="hidden" name="ID[]" value="' . $row['ID'] . '">';
+                                            echo '</tr>';
+                                        }
 
-                        $('input[name^="cal_burned"], input[name^="cal_goal"], input[name^="time_worked"], input[name^="type"]').each(function() {
-                            if (!this.checkValidity()) {
-                                isValid = false;
-                                // Display specific error messages for each input
-                                $('#errorMessages').append('<p>' + $(this).attr('title') + '</p>');
-                                // Highlight the invalid input field
-                                $(this).addClass('invalid');
-                            }
-                        });
+                                        
+                                        ?>
+                                    </tbody>
+                                </table>
+                                <input type="submit" value="Save" onclick="return validateForm();">
+                            </form>
 
-                        return isValid;
-                    }
-                </script>
+                            <script>
+                                function validateForm() {
+                                    $('#errorMessages').html('');
+                                    $('input').removeClass('invalid');
 
-                <style>
-                    .invalid {
-                        border: 2px solid red;
-                    }
-                </style>
+                                    var isValid = true;
+
+                                    $('input[name^="cal_burned"], input[name^="cal_goal"], input[name^="time_worked"], input[name^="type"]').each(function() {
+                                        if (!this.checkValidity()) {
+                                            isValid = false;
+                                            $('#errorMessages').append('<p>' + $(this).attr('title') + '</p>');
+                                            $(this).addClass('invalid');
+                                        }
+                                    });
+
+                                    return isValid;
+                                }
+                            </script>
+
+                            <style>
+                                .invalid {
+                                    border: 2px solid red;
+                                }
+                            </style>
+
+
 
 
 
@@ -309,15 +319,3 @@ session_start();
 </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
