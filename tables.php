@@ -159,7 +159,6 @@ session_start();
                 </nav>
                 <!-- End of Topbar -->
                 <?php
-
                 // Database connection
                 $host = 'localhost';
                 $name = 'final';
@@ -169,81 +168,101 @@ session_start();
                 $connection = new PDO("mysql:dbname=$name;host=$host", $user, $pass);
 
                 // Get user ID
-
                 $user_id = $_SESSION['ID'];
+                //$user_id = 13;
 
                 $query = $connection->prepare('SELECT workouts.* FROM workouts JOIN users ON workouts.user_ID= ?');
                 $query->execute([$user_id]);
                 ?>
+
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">Saved Workouts</h1>
+                    <tbody>
+                        <a href="lib/edit.php">Edit Workout</a><br>
+                        <a href="lib/create.php">Create Workout</a>
+                    </tbody>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
-
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Workout Name</th>
-                                            <th>Calories Burned</th>
-                                            <th>Calorie Burn Goal</th>
-                                            <th>Time Worked Out (Minutes)</th>
-                                            <th>Date</th>
-                                            <th>Type</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                                <?php
+                                $rows = $query->fetchAll(PDO::FETCH_ASSOC);
+                                if ($rows) {
+                                    echo '<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">';
+                                    echo '<thead>';
+                                    echo '<tr>';
+                                    echo '<th>Workout Name</th>';
+                                    echo '<th>Calories Burned</th>';
+                                    echo '<th>Calorie Burn Goal</th>';
+                                    echo '<th>Time Worked Out (Minutes)</th>';
+                                    echo '<th>Date</th>';
+                                    echo '<th>Type</th>';
+                                    echo '</tr>';
+                                    echo '</thead>';
+                                    echo '<tbody>';
 
-                                        <?php
-                                        $row = $query->fetch(PDO::FETCH_ASSOC);
-                                        if ($row) {
-                                            echo '<tr>';
-                                            echo '<td>' . $row['name'] . '</td>';
-                                            echo '<td>' . $row['cal_burned'] . '</td>';
-                                            echo '<td>' . $row['cal_goal'] . '</td>';
-                                            echo '<td>' . $row['time_worked'] . '</td>';
-                                            echo '<td>' . $row['date'] . '</td>';
-                                            echo '<td>' . $row['type'] . '</td>';
-                                            echo '</tr>';
-                                        } else {
-                                            echo 'No workouts found';
-                                        }
-                                        ?>
-                                        </tr>
+                                    // Display workout information
+                                    foreach ($rows as $row) {
+                                        echo '<tr>';
+                                        echo '<td>' . $row['name'] . '</td>';
+                                        echo '<td>' . $row['cal_burned'] . '</td>';
+                                        echo '<td>' . $row['cal_goal'] . '</td>';
+                                        echo '<td>' . $row['time_worked'] . '</td>';
+                                        echo '<td>' . $row['date'] . '</td>';
+                                        echo '<td>' . $row['type'] . '</td>';
+                                        echo '</tr>';
+                                    }
 
-
-
-                                    <tbody>
-                                        <a href="lib/edit.php">Edit Workout</a>
-                                    </tbody>
-                                </table>
+                                    echo '</tbody>';
+                                    echo '</table>';
+                                } else {
+                                    echo 'No workouts found';
+                                }
+                                ?>
                             </div>
                         </div>
                     </div>
 
                 </div>
-                <!-- /.container-fluid -->
+
 
             </div>
-            <!-- End of Main Content -->
 
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2020</span>
-                    </div>
-                </div>
-            </footer>
-            <!-- End of Footer -->
 
+
+            </tr>
+
+
+
+
+
+            </table>
         </div>
-        <!-- End of Content Wrapper -->
+    </div>
+    </div>
+
+    </div>
+    <!-- /.container-fluid -->
+
+    </div>
+    <!-- End of Main Content -->
+
+    <!-- Footer -->
+    <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+                <span>Copyright &copy; Your Website 2020</span>
+            </div>
+        </div>
+    </footer>
+    <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
 
     </div>
     <!-- End of Page Wrapper -->
