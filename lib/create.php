@@ -1,134 +1,10 @@
-<!-- CREATE.PHP FOR TABLES.PHP -->
+<!DOCTYPE html>
+<html lang="en">
 
 <?php
 
-// $userId = $_SESSION['email'];
-// $filePath = $userId . '.json';
-// Check if the user is logged in
-/* if (isset($_SESSION['email'])) {
-
-    // If the "Save Workout" button is clicked
-    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save'])) {
-        // Get input data from the form
-        $workoutName = $_POST['workoutName'];
-        $exercises = $_POST['exercises'];
-        $calorieBurnGoal = $_POST['calorieBurnGoal'];
-        $caloriesBurned = $_POST['caloriesBurned'];
-        $timeWorkedOut = $_POST['timeWorkedOut'];
-
-        // Create an associative array for the workout data
-        $workoutData = [
-            'WorkoutName' => $workoutName,
-            'Exercises' => $exercises,
-            'CalorieBurnGoal' => $calorieBurnGoal,
-            'CaloriesBurned' => $caloriesBurned,
-            'TimeWorkedOut' => $timeWorkedOut,
-        ];
-
-        // Get the current user's JSON file path
-
-
-        // Read existing data if the JSON file exists
-        $data = [];
-        if (file_exists($filePath)) {
-            $jsonData = file_get_contents($filePath);
-            $data = json_decode($jsonData, true);
-        }
-
-        // Append the new workout data
-        $data[] = $workoutData;
-
-        // Save the updated data to the JSON file
-        file_put_contents($filePath, json_encode($data, JSON_PRETTY_PRINT));
-
-        $message = "Workout data saved successfully.";
-    }
-} else {
-    $message = "User not logged in.";
-} */
-?>
-
-<!-- <!DOCTYPE html>
-<html>
-
-<head>
-    <title>Workout Tracker</title>
-</head>
-
-<body>
-    <h1>Workout Tracker</h1>
-
-    <?php if (isset($message)) : ?>
-        <p><?php echo $message; ?></p>
-    <?php endif; ?>
-
-    <form method="post" action="create.php">
-        <label for="workoutName">Workout Name:</label>
-        <input type="text" name="workoutName" required><br>
-
-        <label for="exercises">Exercises:</label>
-        <input type="text" name="exercises" required><br>
-
-        <label for="calorieBurnGoal">Calorie Burn Goal:</label>
-        <input type="number" name="calorieBurnGoal" required><br>
-
-        <label for="caloriesBurned">Calories Burned:</label>
-        <input type="number" name="caloriesBurned" required><br>
-
-        <label for="timeWorkedOut">Time Worked Out (minutes):</label>
-        <input type="number" name="timeWorkedOut" required><br>
-
-        <button type="submit" name="save">Save Workout</button>
-    </form>
-    <a href="edit.php">Edit Wokouts</a><br>
-    <a href="../tables.php">Return To Workouts</a>
-
-</body>
-
-</html> -->
-<?php
-require_once('db.php');
 session_start();
-
-function getUserWorkoutData($userId)
-{
-    $filePath = $_SESSION['id'] . '.json';
-
-    if (file_exists($filePath)) {
-        $jsonData = file_get_contents($filePath);
-    } else {
-        $jsonData = '[]';
-        file_put_contents($filePath, $jsonData);
-    }
-
-    $data = json_decode($jsonData, true);
-
-    return $data;
-}
-$userId = $_SESSION['id'];
-$userWorkoutData = getUserWorkoutData($userId);
-
 ?>
-
-
-<!--  function getUserWorkoutData($userId)
-{
-    $filePath = 'lib/' . $_SESSION['id'] . '.json';
-
-    if (file_exists($filePath)) {
-        $jsonData = file_get_contents($filePath);
-    } else {
-        $jsonData = '[]';
-        file_put_contents($filePath, $jsonData);
-    }
-
-    $data = json_decode($jsonData, true);
-
-    return $data;
-}
-$userId = $_SESSION['id'];
-$userWorkoutData = getUserWorkoutData($userId);  -->
-
 
 
 <head>
@@ -151,7 +27,9 @@ $userWorkoutData = getUserWorkoutData($userId);  -->
     <!-- Custom styles for this page -->
     <link href="../assets/vendors/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
+
 </head>
+
 
 <body id="page-top">
 
@@ -195,8 +73,8 @@ $userWorkoutData = getUserWorkoutData($userId);  -->
                     <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Admin Features:</h6>
-                            <a class="collapse-item" href="admin/users/../../../../index.php">Edit Users</a>
-                            <a class="collapse-item" href="admin/pages/../../../../index.php">Edit Pages</a>
+                            <a class="collapse-item" href="admin/users/../index.php">Edit Users</a>
+                            <a class="collapse-item" href="admin/pages/../index.php">Edit Pages</a>
 
                         </div>
                     </div>
@@ -206,7 +84,7 @@ $userWorkoutData = getUserWorkoutData($userId);  -->
 
             <!-- Nav Item - Tables -->
             <li class="nav-item active">
-                <a class="nav-link" href="tables.php">
+                <a class="nav-link" href="../tables.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Workouts</span></a>
             </li>
@@ -284,161 +162,151 @@ $userWorkoutData = getUserWorkoutData($userId);  -->
                 </nav>
                 <!-- End of Topbar -->
 
+                <?php
+                // Database connection
+                $host = 'localhost';
+                $name = 'final';
+                $user = 'root';
+                $pass = '';
+                $connection = new PDO("mysql:dbname=$name;host=$host", $user, $pass);
+
+                // Get the logged-in user's ID
+                $user_id = $_SESSION['ID'];
+                //$user_id = 13;
+                // Retrieve the user's workouts
+                $query = $connection->prepare('SELECT workouts.* FROM workouts JOIN users ON workouts.user_ID= ?');
+                $query->execute([$user_id]);
+                ?>
+
                 <!-- Begin Page Content -->
-                <div class="container-fluid">
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-                    <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Create Workouts</h1>
-                    <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Workout Name</th>
-                                            <th>Exercises</th>
-                                            <th>Calorie Burn Goal</th>
-                                            <th>Calories Burned</th>
-                                            <th>Time Worked Out (Minutes)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <form method="post">
-                                                <td><input type="text" name="workoutName" required></td>
-                                                <td><input type="text" name="exercises" required></td>
-                                                <td><input type="number" name="calorieGoal" required></td>
-                                                <td><input type="number" name="caloriesBurned" required></td>
-                                                <td><input type="number" name="timeWorkedOut" required></td>
-                                                <td><button type="submit">Create</button></td>
-                                            </form>
-                                        </tr>
-                                        <?php
-
-
-                                        $host = 'localhost';
-                                        $name = 'final';
-                                        $user = 'root';
-                                        $pass = '';
-
-                                        //Specify options
-                                        $opt = [
-                                            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                                            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                                            PDO::ATTR_EMULATE_PREPARES => false
-                                        ];
-                                        $connection = new PDO('mysql:host=' . $host . ';dbname=' . $name . ';charset=utf8mb4', $user, $pass, $opt);
-
-                                                if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-                                                    // Get form data
-                                                    $name = $_POST['workoutName'];
-                                                    $exercises = $_POST['exercises'];
-                                                    $calories = $_POST['caloriesBurned'];
-                                                    $time = $_POST['timeWorkedOut'];
-
-                                                    // Insert into database
-                                                    $stmt = $connection->prepare("INSERT INTO workouts (name, exercises, cal_burned, time_worked) VALUES (?, ?, ?, ?)");
-
-                                                    $stmt->execute([$name, $exercises, $calories, $time]);
-                                                }
-
-                                                // Get workouts for display
-                                                $query = $connection->prepare('SELECT * FROM workouts');
-                                                $query->execute();
-                                        ?>
-
-                                        <table>
-                                            <thead>
-                                                <tr>
-                                                    <th>Name</th>
-                                                    <th>Exercises</th>
-                                                    <th>Calories Burned</th>
-                                                    <th>Time</th>
-                                                </tr>
-                                            </thead>
-
-                                            <tbody>
-
-                                                <?php while ($row = $query->fetch()) : ?>
-                                                    <tr>
-                                                        <td><?php echo $row['name']; ?></td>
-                                                        <td><?php echo $row['cal_burned']; ?></td>
-                                                        <td><?php echo $row['time_worked']; ?></td>
-                                                    </tr>
-                                                <?php endwhile; ?>
-
-                                            </tbody>
-                                        </table>
+                <form method="post" action="createWorkoutData.php" id="workoutForm">
+                    <div id="errorMessages" style="color: red;"></div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Workout Name</th>
+                                <th>Calories Burned</th>
+                                <th>Calorie Burn Goal</th>
+                                <th>Time Worked Out (Minutes)</th>
+                                <th>Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $row = $query->fetch(PDO::FETCH_ASSOC);
+                            if ($row) {
+                                echo '<tr>';
+                                echo '<td><input type="text" name="name[]" maxlength="20"></td>';
+                                echo '<td><input type="text" name="cal_burned[]" pattern="\d{1,4}" title="Enter up to 4 numbers"></td>';
+                                echo '<td><input type="text" name="cal_goal[]" pattern="\d{1,4}" title="Enter up to 4 numbers"></td>';
+                                echo '<td><input type="text" name="time_worked[]" pattern="\d{1,2}" title="Enter up to 2 numbers"></td>';
+                                echo '<td><input type="text" name="type[]" maxlength="20" pattern="\d{1,20}" title="Enter up to 20 numbers"></td>';
+                                echo '<input type="hidden" name="ID[]" value="' . $_SESSION['ID'] . '">';
+                                echo '</tr>';
+                            } else {
+                                echo 'No workouts found';
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                    <input type="submit" value="Save" onclick="return validateForm();">
+                </form>
 
 
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.container-fluid -->
+                <script>
+                    function validateForm() {
+                        $('#errorMessages').html('');
+                        $('input').removeClass('invalid');
 
-                </div>
-                <!-- End of Main Content -->
+                        var isValid = true;
 
-                <!-- Footer -->
-                <footer class="sticky-footer bg-white">
-                    <div class="container my-auto">
-                        <div class="copyright text-center my-auto">
-                            <span>Copyright &copy; Your Website 2020</span>
-                        </div>
-                    </div>
-                </footer>
-                <!-- End of Footer -->
+                        $('input[name^="cal_burned"], input[name^="cal_goal"], input[name^="time_worked"], input[name^="type"]').each(function() {
+                            if (!this.checkValidity()) {
+                                isValid = false;
+                                // Display specific error messages for each input
+                                $('#errorMessages').append('<p>' + $(this).attr('title') + '</p>');
+                                // Highlight the invalid input field
+                                $(this).addClass('invalid');
+                            }
+                        });
 
-            </div>
-            <!-- End of Content Wrapper -->
+                        return isValid;
+                    }
+                </script>
 
+                <style>
+                    .invalid {
+                        border: 2px solid red;
+                    }
+                </style>
+
+
+
+
+
+
+
+
+
+
+</html>
+
+<!-- End of Main Content -->
+
+<!-- Footer -->
+<footer class="sticky-footer bg-white">
+    <div class="container my-auto">
+        <div class="copyright text-center my-auto">
+            <span>Copyright &copy; Your Website 2020</span>
         </div>
-        <!-- End of Page Wrapper -->
+    </div>
+</footer>
+<!-- End of Footer -->
 
-        <!-- Scroll to Top Button-->
-        <a class="scroll-to-top rounded" href="#page-top">
-            <i class="fas fa-angle-up"></i>
-        </a>
 
-        <!-- Logout Modal-->
-        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <a class="btn btn-primary" href="login.php">Logout</a>
-                    </div>
-                </div>
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="../login.php">Logout</a>
             </div>
         </div>
+    </div>
+</div>
 
-        <!-- Bootstrap core JavaScript-->
-        <script src="assets/vendors/jquery/jquery.min.js"></script>
-        <script src="assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Bootstrap core JavaScript-->
+<script src="../assets/vendors/jquery/jquery.min.js"></script>
+<script src="../assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-        <!-- Core plugin JavaScript-->
-        <script src="assets/vendors/jquery-easing/jquery.easing.min.js"></script>
+<!-- Core plugin JavaScript-->
+<script src="../assets/vendors/jquery-easing/jquery.easing.min.js"></script>
 
-        <!-- Custom scripts for all pages-->
-        <script src="assets/js/sb-admin-2.min.js"></script>
+<!-- Custom scripts for all pages-->
+<script src="../assets/js/sb-admin-2.min.js"></script>
 
-        <!-- Page level plugins -->
-        <script src="assets/vendors/datatables/jquery.dataTables.min.js"></script>
-        <script src="assets/vendors/datatables/dataTables.bootstrap4.min.js"></script>
+<!-- Page level plugins -->
+<script src="../assets/vendors/datatables/jquery.dataTables.min.js"></script>
+<script src="../assets/vendors/datatables/dataTables.bootstrap4.min.js"></script>
 
-        <!-- Page level custom scripts -->
-        <script src="assets/js/demo/datatables-demo.js"></script>
+<!-- Page level custom scripts -->
+<script src="../assets/js/demo/datatables-demo.js"></script>
 
 </body>
 
