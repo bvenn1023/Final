@@ -39,7 +39,7 @@ function signin($email,$password){
 
 
 
-if(isset($_SESSION['email'])) die('You are already sign in, no need to sign in.');
+if(isset($_SESSION['email'])) header("Location: index.php");
 $showForm=true;
 if(count($_POST)>0){
 	if(isset($_POST['email'][0]) && isset($_POST['password'][0])){

@@ -170,7 +170,7 @@ if (isset ($_POST["logout"])){
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                 Total Workouts</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php countArraysInJsonFile("lib/".$_SESSION['id'].".json")?></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php totalWorkouts($_SESSION["ID"])?></div>
                                         </div>
                                     </div>
                                 </div>
