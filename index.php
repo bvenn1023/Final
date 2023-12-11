@@ -72,7 +72,7 @@ if (isset ($_POST["logout"])){
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
                     <i class="fas fa-fw fa-folder"></i>
-                    <span>Pages</span>
+                    <span>Admin</span>
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
@@ -170,7 +170,7 @@ if (isset ($_POST["logout"])){
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                 Total Workouts</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php totalWorkouts($_SESSION["ID"])?></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php totalWorkouts($_SESSION["ID"]);?></div>
                                         </div>
                                     </div>
                                 </div>
@@ -184,8 +184,8 @@ if (isset ($_POST["logout"])){
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Total Calories Burned</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php totalCalories("lib/".$_SESSION['id'].".json")?></div>
+                                                Workouts Completed Today</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php workoutsToday($_SESSION["ID"]);?></div>
                                         </div>
                                     </div>
                                 </div>
@@ -198,7 +198,7 @@ if (isset ($_POST["logout"])){
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total Minutes
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total Calories Burned Today
                                             </div>
                                             <div class="row no-gutters align-items-center">
                                                 <div class="col-auto">
