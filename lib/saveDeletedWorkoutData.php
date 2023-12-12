@@ -6,7 +6,6 @@
 session_start();
 ?>
 
-
 <head>
 
     <meta charset="utf-8">
@@ -27,9 +26,7 @@ session_start();
     <!-- Custom styles for this page -->
     <link href="../assets/vendors/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
-
 </head>
-
 
 <body id="page-top">
 
@@ -40,7 +37,7 @@ session_start();
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../index.php">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../tables.php">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -73,8 +70,8 @@ session_start();
                     <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Admin Features:</h6>
-                            <a class="collapse-item" href="admin/users/../index.php">Edit Users</a>
-                            <a class="collapse-item" href="admin/pages/../index.php">Edit Pages</a>
+                            <a class="collapse-item" href="../admin/users/index.php">Edit Users</a>
+                            <a class="collapse-item" href="../admin/pages/index.php">Edit Pages</a>
 
                         </div>
                     </div>
@@ -160,150 +157,90 @@ session_start();
                     </ul>
 
                 </nav>
-                <!-- End of Topbar -->
 
                 <?php
-                // Database connection
-                $host = 'localhost';
-                $name = 'final';
-                $user = 'root';
-                $pass = '';
-                $connection = new PDO("mysql:dbname=$name;host=$host", $user, $pass);
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    // Database connection
+                    $host = 'localhost';
+                    $name = 'final';
+                    $user = 'root';
+                    $pass = '';
 
-                $user_id = $_SESSION['ID'];
-                $query = $connection->prepare('SELECT * FROM workouts WHERE user_id = ?');
-                $query->execute([$user_id]);
+                    try {
+                        $pdo = new PDO("mysql:host=$host;dbname=$name", $user, $pass);
+                        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+                        $id = $_POST['id'];
+
+                        $stmt = $pdo->prepare("DELETE FROM workouts WHERE ID = ?");
+                        $stmt->execute([$id]);
+
+                        echo 'Workout deleted successfully!';
+                    } catch (PDOException $e) {
+                        echo 'Error: ' . $e->getMessage();
+                    }
+                }
                 ?>
 
-                <!-- Begin Page Content -->
-                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-                <form method="post" action="createWorkoutData.php" id="workoutForm">
-                    <div id="errorMessages" style="color: red;"></div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Workout Name</th>
-                                <th>Calories Burned</th>
-                                <th>Calorie Burn Goal</th>
-                                <th>Time Worked Out (Minutes)</th>
-                                <th>Type</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $row = $query->fetch(PDO::FETCH_ASSOC);
-                            if ($row) {
-                                echo '<tr>';
-                                echo '<td><input type="text" name="name[]" maxlength="20"></td>';
-                                echo '<td><input type="text" name="cal_burned[]" pattern="\d{1,4}" title="Enter up to 4 numbers"></td>';
-                                echo '<td><input type="text" name="cal_goal[]" pattern="\d{1,4}" title="Enter up to 4 numbers"></td>';
-                                echo '<td><input type="text" name="time_worked[]" pattern="\d{1,2}" title="Enter up to 2 numbers"></td>';
-                                echo '<td><input type="text" name="type[]" maxlength="20" pattern="\d{1,20}" title="Enter up to 20 numbers"></td>';
-                                echo '<td><input type="text" name="workout_date[]" pattern="\d{4}[-/](0[1-9]|1[0-2])[-/](0[1-9]|[12][0-9]|3[01])" title="Enter a date (yyyy-mm-dd or yyyy/mm/dd)" maxlength="10"></td>';
-                                echo '<input type="hidden" name="ID[]" value="' . $_SESSION['ID'] . '">';
-                                echo '</tr>';
-                            } else {
-                                echo 'No workouts found';
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                    <input type="submit" value="Save" onclick="return validateForm();">
-                </form>
-
-                <script>
-                    function validateForm() {
-                        $('#errorMessages').html('');
-                        $('input').removeClass('invalid');
-
-                        var isValid = true;
-
-                        $('input[name^="cal_burned"], input[name^="cal_goal"], input[name^="time_worked"], input[name^="type"], input[name^="workout_date"]').each(function() {
-                            if (!this.checkValidity()) {
-                                isValid = false;
-                                $('#errorMessages').append('<p>' + $(this).attr('title') + '</p>');
-                                $(this).addClass('invalid');
-                            }
-                        });
-
-                        return isValid;
-                    }
-
-                    $(document).ready(function() {
-                        $('#workoutForm').submit(function(event) {
-                            if (!validateForm()) {
-                                event.preventDefault(); 
-                            }
-                        });
-                    });
-                </script>
-
-
-                <style>
-                    .invalid {
-                        border: 2px solid red;
-                    }
-                </style>
-
-
-</html>
-
-<!-- End of Main Content -->
-
-<!-- Footer -->
-<footer class="sticky-footer bg-white">
-    <div class="container my-auto">
-        <div class="copyright text-center my-auto">
-            <span>Copyright &copy; Your Website 2020</span>
-        </div>
-    </div>
-</footer>
-<!-- End of Footer -->
-
-
-
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a>
-
-<!-- Logout Modal-->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
             </div>
-            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="../login.php">Logout</a>
+        </div>
+
+    </div>
+    <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+                <span>Copyright &copy; Your Website 2020</span>
+            </div>
+        </div>
+    </footer>
+    <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="../login.php">Logout</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Bootstrap core JavaScript-->
-<script src="../assets/vendors/jquery/jquery.min.js"></script>
-<script src="../assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap core JavaScript-->
+    <script src="../assets/vendors/jquery/jquery.min.js"></script>
+    <script src="../assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-<!-- Core plugin JavaScript-->
-<script src="../assets/vendors/jquery-easing/jquery.easing.min.js"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="../assets/vendors/jquery-easing/jquery.easing.min.js"></script>
 
-<!-- Custom scripts for all pages-->
-<script src="../assets/js/sb-admin-2.min.js"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="../assets/js/sb-admin-2.min.js"></script>
 
-<!-- Page level plugins -->
-<script src="../assets/vendors/datatables/jquery.dataTables.min.js"></script>
-<script src="../assets/vendors/datatables/dataTables.bootstrap4.min.js"></script>
+    <!-- Page level plugins -->
+    <script src="../assets/vendors/datatables/jquery.dataTables.min.js"></script>
+    <script src="../assets/vendors/datatables/dataTables.bootstrap4.min.js"></script>
 
-<!-- Page level custom scripts -->
-<script src="../assets/js/demo/datatables-demo.js"></script>
+    <!-- Page level custom scripts -->
+    <script src="../assets/js/demo/datatables-demo.js"></script>
 
 </body>
 
