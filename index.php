@@ -3,7 +3,7 @@
 
 <?php require_once('functions.php');
 
-if (!isset($_SESSION['email'])) die('This is a private area, you are not allowed here');
+if (!isset($_SESSION['email'])) header("Location: redirect.php");
 
 
 if (isset($_POST["logout"])) {
@@ -67,20 +67,20 @@ if (isset($_POST["logout"])) {
 
 
             <!-- Nav Item - Pages Collapse Menu -->
-            <?php //only executes if user is admin, links to admin features
-            if ($_SESSION['role'] == 1) { ?>
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-                        <i class="fas fa-fw fa-folder"></i>
-                        <span>Pages</span>
-                    </a>
-                    <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                        <div class="bg-white py-2 collapse-inner rounded">
-                            <h6 class="collapse-header">Admin Features:</h6>
-                            <a class="collapse-item" href="admin/users/index.php">Edit Users</a>
-                            <a class="collapse-item" href="admin/pages/index.php">Edit Pages</a>
 
-                        </div>
+			<?php //only executes if user is admin, links to admin features
+			if ($_SESSION['role']==1){?>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Pages</span>
+                </a>
+                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Admin Features:</h6>
+                        <a class="collapse-item" href="admin/users/index.php">Edit Users</a>
+                        <a class="collapse-item" href="admin/pages/index.php">Edit Pages</a>
+
                     </div>
                 </li>
             <?php } ?>

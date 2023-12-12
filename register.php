@@ -1,24 +1,8 @@
 <!DOCTYPE html>
 <?php
-function countLinesInCSV($file_path) {
-    $line_count = 0;
 
-    if (($handle = fopen($file_path, "r")) !== false) {
-        while (($data = fgetcsv($handle)) !== false) {
-            $line_count++;
-        }
-        fclose($handle);
-    }
+function createUser(){
 
-    return $line_count;
-}
-
-// Usage example:
-$csv_file = "your_csv_file.csv";
-$line_count = countLinesInCSV("data/users.csv");
-echo "Total lines in the CSV file: $line_count";
-
-function createcsv(){
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $name = $_POST["email"];
         $password = $_POST["password"];
@@ -26,29 +10,30 @@ function createcsv(){
         if (empty($name) || empty($password)) {
             echo '<p>Please fill in all fields.</p>';
         } else {
-            $csvFile = 'data/users.csv';
-			$fp=fopen($csvFile,"a");
-			$admin=0;
-			$id=countLinesInCSV("data/users.csv")+1;
-			$list=array(
-			array($name,$password,$admin,$id),
-			
-			
-			);
-			//fwrite($fp,"\n");
-			foreach ($list as $fields) {
-				fputcsv($fp, $fields,",");
-				}
 
-			fclose($fp);
+            $host='localhost';
+			$name='final';
+			$user='root';
+			$pass='';
 
+
+			//Specify options
+			$opt = [
+				PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+				PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+				PDO::ATTR_EMULATE_PREPARES => false
+			];
+			$connection=new PDO('mysql:host='.$host.';dbname='.$name.';charset=utf8mb4',$user,$pass,$opt);
+			$query=$connection->prepare("INSERT INTO users (email, password, firstname, lastname, role) VALUES (?, ?, ?, ?, ?)");
+		    $query->execute([$_POST["email"], $_POST["password"], $_POST["firstname"], $_POST["lastname"], 0]);
+			
   
             header("Location: login.php");
             exit;
         }
     }
 }
-createcsv();
+createUser();
 ?>
 <html lang="en">
 
@@ -90,11 +75,11 @@ createcsv();
                             <form class="user" method="POST" action="register.php">
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="exampleFirstName"
+                                        <input type="text" class="form-control form-control-user" id="exampleFirstName" name="firstname"
                                             placeholder="First Name">
                                     </div>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control form-control-user" id="exampleLastName"
+                                        <input type="text" class="form-control form-control-user" id="exampleLastName" name="lastname"
                                             placeholder="Last Name">
                                     </div>
                                 </div>

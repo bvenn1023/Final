@@ -3,7 +3,12 @@
 
 
 <?php require "pages.php";
-session_start();
+if (isset ($_POST["logout"])){
+	session_unset();
+	session_destroy();
+	header("Location: ../../login.php");
+	exit;
+}
 	
     if (!is_dir("../..")) {
         echo "Folder not found";
@@ -17,7 +22,7 @@ session_start();
 	//rest of code in tables section
 
 
-if ($_SESSION['admin']==true){?>
+if ($_SESSION['role']==1){?>
 
 
 <head>
@@ -63,7 +68,7 @@ if ($_SESSION['admin']==true){?>
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="index.php">
+                <a class="nav-link" href="../../index.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>

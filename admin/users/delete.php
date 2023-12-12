@@ -1,12 +1,11 @@
 <?php 
 require "users.php";
 
-if (isset($_GET["name"])){
+if (isset($_GET["getid"])){
 	
-	deletecsv("../../data/users.csv",$_GET["name"]);
 	
-	print_r($_POST);
-	//echo(readText('../../data/info.txt','1'));
+	
+	deleteUser();
 	header("Location: index.php");
 	exit;
 }
