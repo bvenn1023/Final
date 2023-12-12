@@ -177,39 +177,34 @@ session_start();
                         $cal_goals = $_POST['cal_goal'];
                         $time_workeds = $_POST['time_worked'];
                         $types = $_POST['type'];
+                        $dates = $_POST['workout_date'];
 
-                        // Loop through the data and insert new records
                         foreach ($workoutIDs as $key => $workoutID) {
                             $name = $names[$key];
                             $cal_burned = $cal_burneds[$key];
                             $cal_goal = $cal_goals[$key];
                             $time_worked = $time_workeds[$key];
                             $type = $types[$key];
+                            $date = $dates[$key];
 
-                            // Insert a new workout record
-                            $query = $connection->prepare('INSERT INTO workouts (user_ID, name, cal_burned, cal_goal, time_worked, type) VALUES (?, ?, ?, ?, ?, ?)');
-                            $query->execute([$workoutID, $name, $cal_burned, $cal_goal, $time_worked, $type]);
+                            $query = $connection->prepare('INSERT INTO workouts (user_ID, name, cal_burned, cal_goal, time_worked, type, date) VALUES (?, ?, ?, ?, ?, ?, ?)');
+                            $query->execute([$workoutID, $name, $cal_burned, $cal_goal, $time_worked, $type, $date]);
                         }
 
-                        // Return a success message
                         echo '<div class="alert alert-success" role="alert">';
-                        echo 'Workout(s) saved successfully!';
+                        echo 'Workout saved successfully!';
                         echo '</div>';
                     } catch (PDOException $e) {
-                        // Handle database connection or query errors
                         echo '<div class="alert alert-danger" role="alert">';
                         echo 'Error: ' . $e->getMessage();
                         echo '</div>';
-                    } finally {
-                        // Close the database connection
-                        $connection = null;
                     }
                 } else {
-                    // Handle invalid request method
                     echo '<div class="alert alert-danger" role="alert">';
                     echo 'Invalid request method';
                     echo '</div>';
                 }
+
                 ?>
 
 
