@@ -171,7 +171,7 @@ session_start();
                 $user_id = $_SESSION['ID'];
                 //$user_id = 13;
 
-                $query = $connection->prepare('SELECT workouts.* FROM workouts JOIN users ON workouts.user_ID= ?');
+                $query = $connection->prepare('SELECT * FROM workouts WHERE user_id = ?');
                 $query->execute([$user_id]);
                 ?>
 
@@ -182,7 +182,8 @@ session_start();
                     <h1 class="h3 mb-2 text-gray-800">Saved Workouts</h1>
                     <tbody>
                         <a href="lib/edit.php">Edit Workout</a><br>
-                        <a href="lib/create.php">Create Workout</a>
+                        <a href="lib/create.php">Create Workout</a><br>
+                        <a href="lib/delete.php">Delete Workout</a>
                     </tbody>
 
                     <!-- DataTales Example -->

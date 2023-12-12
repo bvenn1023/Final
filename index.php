@@ -6,11 +6,11 @@
 if (!isset($_SESSION['email'])) die('This is a private area, you are not allowed here');
 
 
-if (isset ($_POST["logout"])){
-	session_unset();
-	session_destroy();
-	header("Location: login.php");
-	exit;
+if (isset($_POST["logout"])) {
+    session_unset();
+    session_destroy();
+    header("Location: login.php");
+    exit;
 }
 
 ?>
@@ -61,30 +61,30 @@ if (isset ($_POST["logout"])){
                     <span>Dashboard</span></a>
             </li>
 
-         
- 
-   
-       
+
+
+
+
 
             <!-- Nav Item - Pages Collapse Menu -->
-			<?php //only executes if user is admin, links to admin features
-			if ($_SESSION['admin']==true){?>
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Pages</span>
-                </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Admin Features:</h6>
-                        <a class="collapse-item" href="admin/users/index.php">Edit Users</a>
-                        <a class="collapse-item" href="admin/pages/index.php">Edit Pages</a>
-                       
+            <?php //only executes if user is admin, links to admin features
+            if ($_SESSION['role'] == 1) { ?>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+                        <i class="fas fa-fw fa-folder"></i>
+                        <span>Pages</span>
+                    </a>
+                    <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <h6 class="collapse-header">Admin Features:</h6>
+                            <a class="collapse-item" href="admin/users/index.php">Edit Users</a>
+                            <a class="collapse-item" href="admin/pages/index.php">Edit Pages</a>
+
+                        </div>
                     </div>
-                </div>
-            </li>
-			<?php }?>
-           
+                </li>
+            <?php } ?>
+
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
@@ -92,7 +92,7 @@ if (isset ($_POST["logout"])){
                     <i class="fas fa-fw fa-table"></i>
                     <span>View Workouts</span></a>
             </li>
-			<li class="nav-item">
+            <li class="nav-item">
                 <a class="nav-link" href="lib/edit.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Edit Workouts</span></a>
@@ -124,25 +124,25 @@ if (isset ($_POST["logout"])){
                         <i class="fa fa-bars"></i>
                     </button>
 
-                   <h2>Gymify Fitness Application</h2>
+                    <h2>Gymify Fitness Application</h2>
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
 
-                      
-                       
+
+
 
                         <div class="topbar-divider d-none d-sm-block"></div>
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION["email"];?></span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION["email"]; ?></span>
                                 <form method="POST">
-									<input type="submit" name="logout" value="logout">
-								</form>
+                                    <input type="submit" name="logout" value="logout">
+                                </form>
                             </a>
-                         
+
                         </li>
 
                     </ul>
@@ -170,7 +170,7 @@ if (isset ($_POST["logout"])){
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                 Total Workouts</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php countArraysInJsonFile("lib/".$_SESSION['id'].".json")?></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php countArraysInJsonFile("lib/" . $_SESSION['id'] . ".json") ?></div>
                                         </div>
                                     </div>
                                 </div>
@@ -185,7 +185,7 @@ if (isset ($_POST["logout"])){
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                 Total Calories Burned</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php totalCalories("lib/".$_SESSION['id'].".json")?></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php totalCalories("lib/" . $_SESSION['id'] . ".json") ?></div>
                                         </div>
                                     </div>
                                 </div>
@@ -202,9 +202,9 @@ if (isset ($_POST["logout"])){
                                             </div>
                                             <div class="row no-gutters align-items-center">
                                                 <div class="col-auto">
-                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?php totalTimeSpent("lib/".$_SESSION['id'].".json")?></div>
+                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?php totalTimeSpent("lib/" . $_SESSION['id'] . ".json") ?></div>
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -220,7 +220,7 @@ if (isset ($_POST["logout"])){
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                                 Total Burn Goal</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php totalCaloriesGoal("lib/".$_SESSION['id'].".json")?></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php totalCaloriesGoal("lib/" . $_SESSION['id'] . ".json") ?></div>
                                         </div>
                                     </div>
                                 </div>
@@ -234,6 +234,126 @@ if (isset ($_POST["logout"])){
             </div>
             <!-- End of Main Content -->
 
+            <html>
+
+            <head>
+                <title>Calendar</title>
+
+                <style>
+                    .calendar {
+                        width: 100%;
+                        max-width: 600px;
+                        margin: 0 auto;
+                        font-family: sans-serif;
+                    }
+
+                    .month-year {
+                        font-weight: bold;
+                        font-size: 1.5em;
+                        text-align: center;
+                        padding: 10px 0;
+                        background: #d3d3d3;
+                    }
+
+                    table {
+                        border-collapse: collapse;
+                    }
+
+                    th,
+                    td {
+                        padding: 10px;
+                        text-align: center;
+                        border: 1px solid #ddd;
+                    }
+                </style>
+
+            </head>
+
+            <body>
+
+                <?php
+                // Database connection
+                $host = 'localhost';
+                $name = 'final';
+                $user = 'root';
+                $pass = '';
+                $connection = new PDO("mysql:dbname=$name;host=$host", $user, $pass);
+
+                $user_id = $_SESSION['ID'];
+
+                $query = $connection->prepare('SELECT DISTINCT date FROM workouts WHERE user_id = ?');
+                $query->execute([$user_id]);
+                $highlight_dates = $query->fetchAll(PDO::FETCH_COLUMN);
+
+                $month = date('m'); 
+                $year = date('Y');   
+                ?>
+
+                <div class="calendar">
+
+                    <div class="month-year">
+                        <?php echo date("F Y", mktime(0, 0, 0, $month, 1, $year)); ?>
+                    </div>
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Sun</th>
+                                <th>Mon</th>
+                                <th>Tue</th>
+                                <th>Wed</th>
+                                <th>Thu</th>
+                                <th>Fri</th>
+                                <th>Sat</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <?php
+
+                            $num_days = date('t', mktime(0, 0, 0, $month, 1, $year));
+                            $first_day = date('N', mktime(0, 0, 0, $month, 1, $year));
+
+                            for ($i = 0; $i < $num_days; $i++) {
+                                $date = $i + 1;
+
+                                if ($i % 7 == 0) echo "<tr>";
+                                echo "<td>";
+                                if (in_array(date('Y-m-d', strtotime($year . "-" . $month . "-" . $date)), $highlight_dates)) {
+                                    echo "<div style='border:3px solid rgba(0, 99, 71, 0.5) '>$date</div>";
+                                } else {
+                                    echo $date;
+                                }
+                                echo "</td>";
+                                if ($i % 7 == 6) echo "</tr>";
+                            }
+
+                            ?>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+                <style>
+                    .calendar {
+                        max-width: 800px;
+                        margin: 0 auto;
+                    }
+
+                    table {
+                        width: 100%;
+                    }
+                    td {
+                        height: 60px;
+                        text-align: center;
+                    }
+
+                </style>
+
+            </html>
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
