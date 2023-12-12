@@ -170,11 +170,8 @@ session_start();
                 $pass = '';
                 $connection = new PDO("mysql:dbname=$name;host=$host", $user, $pass);
 
-                // Get the logged-in user's ID
                 $user_id = $_SESSION['ID'];
-                //$user_id = 13;
-                // Retrieve the user's workouts
-                $query = $connection->prepare('SELECT workouts.* FROM workouts JOIN users ON workouts.user_ID= ?');
+                $query = $connection->prepare('SELECT * FROM workouts WHERE user_id = ?');
                 $query->execute([$user_id]);
                 ?>
 
@@ -191,6 +188,7 @@ session_start();
                                 <th>Calorie Burn Goal</th>
                                 <th>Time Worked Out (Minutes)</th>
                                 <th>Type</th>
+                                <th>Date</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -203,6 +201,7 @@ session_start();
                                 echo '<td><input type="text" name="cal_goal[]" pattern="\d{1,4}" title="Enter up to 4 numbers"></td>';
                                 echo '<td><input type="text" name="time_worked[]" pattern="\d{1,2}" title="Enter up to 2 numbers"></td>';
                                 echo '<td><input type="text" name="type[]" maxlength="20" pattern="\d{1,20}" title="Enter up to 20 numbers"></td>';
+                                echo '<td><input type="text" name="workout_date[]" pattern="\d{4}[-/](0[1-9]|1[0-2])[-/](0[1-9]|[12][0-9]|3[01])" title="Enter a date (yyyy-mm-dd or yyyy/mm/dd)" maxlength="10"></td>';
                                 echo '<input type="hidden" name="ID[]" value="' . $_SESSION['ID'] . '">';
                                 echo '</tr>';
                             } else {
@@ -214,7 +213,6 @@ session_start();
                     <input type="submit" value="Save" onclick="return validateForm();">
                 </form>
 
-
                 <script>
                     function validateForm() {
                         $('#errorMessages').html('');
@@ -222,33 +220,32 @@ session_start();
 
                         var isValid = true;
 
-                        $('input[name^="cal_burned"], input[name^="cal_goal"], input[name^="time_worked"], input[name^="type"]').each(function() {
+                        $('input[name^="cal_burned"], input[name^="cal_goal"], input[name^="time_worked"], input[name^="type"], input[name^="workout_date"]').each(function() {
                             if (!this.checkValidity()) {
                                 isValid = false;
-                                // Display specific error messages for each input
                                 $('#errorMessages').append('<p>' + $(this).attr('title') + '</p>');
-                                // Highlight the invalid input field
                                 $(this).addClass('invalid');
                             }
                         });
 
                         return isValid;
                     }
+
+                    $(document).ready(function() {
+                        $('#workoutForm').submit(function(event) {
+                            if (!validateForm()) {
+                                event.preventDefault(); 
+                            }
+                        });
+                    });
                 </script>
+
 
                 <style>
                     .invalid {
                         border: 2px solid red;
                     }
                 </style>
-
-
-
-
-
-
-
-
 
 
 </html>

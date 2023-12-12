@@ -17,14 +17,14 @@ session_start();
     <title>SB Admin 2 - Tables</title>
 
     <!-- Custom fonts for this template -->
-    <link href="assets/vendors/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="../assets/vendors/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="assets/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="../assets/css/sb-admin-2.min.css" rel="stylesheet">
 
     <!-- Custom styles for this page -->
-    <link href="assets/vendors/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="../assets/vendors/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
 </head>
 
@@ -37,7 +37,7 @@ session_start();
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="tables.php">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../tables.php">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -49,7 +49,7 @@ session_start();
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="index.php">
+                <a class="nav-link" href="../index.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -70,8 +70,8 @@ session_start();
                     <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Admin Features:</h6>
-                            <a class="collapse-item" href="admin/users/index.php">Edit Users</a>
-                            <a class="collapse-item" href="admin/pages/index.php">Edit Pages</a>
+                            <a class="collapse-item" href="../admin/users/index.php">Edit Users</a>
+                            <a class="collapse-item" href="../admin/pages/index.php">Edit Pages</a>
 
                         </div>
                     </div>
@@ -81,7 +81,7 @@ session_start();
 
             <!-- Nav Item - Tables -->
             <li class="nav-item active">
-                <a class="nav-link" href="tables.php">
+                <a class="nav-link" href="../tables.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Workouts</span></a>
             </li>
@@ -157,102 +157,35 @@ session_start();
                     </ul>
 
                 </nav>
-                <!-- End of Topbar -->
+
                 <?php
-                // Database connection
-                $host = 'localhost';
-                $name = 'final';
-                $user = 'root';
-                $pass = '';
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    // Database connection
+                    $host = 'localhost';
+                    $name = 'final';
+                    $user = 'root';
+                    $pass = '';
 
-                $connection = new PDO("mysql:dbname=$name;host=$host", $user, $pass);
+                    try {
+                        $pdo = new PDO("mysql:host=$host;dbname=$name", $user, $pass);
+                        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-                // Get user ID
-                $user_id = $_SESSION['ID'];
-                //$user_id = 13;
+                        $id = $_POST['id'];
 
-                $query = $connection->prepare('SELECT * FROM workouts WHERE user_id = ?');
-                $query->execute([$user_id]);
+                        $stmt = $pdo->prepare("DELETE FROM workouts WHERE ID = ?");
+                        $stmt->execute([$id]);
+
+                        echo 'Workout deleted successfully!';
+                    } catch (PDOException $e) {
+                        echo 'Error: ' . $e->getMessage();
+                    }
+                }
                 ?>
 
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
-
-                    <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Saved Workouts</h1>
-                    <tbody>
-                        <a href="lib/edit.php">Edit Workout</a><br>
-                        <a href="lib/create.php">Create Workout</a><br>
-                        <a href="lib/delete.php">Delete Workout</a>
-                    </tbody>
-
-                    <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <?php
-                                $rows = $query->fetchAll(PDO::FETCH_ASSOC);
-                                if ($rows) {
-                                    echo '<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">';
-                                    echo '<thead>';
-                                    echo '<tr>';
-                                    echo '<th>Workout Name</th>';
-                                    echo '<th>Calories Burned</th>';
-                                    echo '<th>Calorie Burn Goal</th>';
-                                    echo '<th>Time Worked Out (Minutes)</th>';
-                                    echo '<th>Date</th>';
-                                    echo '<th>Type</th>';
-                                    echo '</tr>';
-                                    echo '</thead>';
-                                    echo '<tbody>';
-
-                                    // Display workout information
-                                    foreach ($rows as $row) {
-                                        echo '<tr>';
-                                        echo '<td>' . $row['name'] . '</td>';
-                                        echo '<td>' . $row['cal_burned'] . '</td>';
-                                        echo '<td>' . $row['cal_goal'] . '</td>';
-                                        echo '<td>' . $row['time_worked'] . '</td>';
-                                        echo '<td>' . $row['date'] . '</td>';
-                                        echo '<td>' . $row['type'] . '</td>';
-                                        echo '</tr>';
-                                    }
-
-                                    echo '</tbody>';
-                                    echo '</table>';
-                                } else {
-                                    echo 'No workouts found';
-                                }
-                                ?>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-
             </div>
-
-
-
-            </tr>
-
-
-
-
-
-            </table>
         </div>
-    </div>
-    </div>
 
     </div>
-    <!-- /.container-fluid -->
-
-    </div>
-    <!-- End of Main Content -->
-
-    <!-- Footer -->
     <footer class="sticky-footer bg-white">
         <div class="container my-auto">
             <div class="copyright text-center my-auto">
@@ -286,28 +219,28 @@ session_start();
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.php">Logout</a>
+                    <a class="btn btn-primary" href="../login.php">Logout</a>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="assets/vendors/jquery/jquery.min.js"></script>
-    <script src="assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/vendors/jquery/jquery.min.js"></script>
+    <script src="../assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
-    <script src="assets/vendors/jquery-easing/jquery.easing.min.js"></script>
+    <script src="../assets/vendors/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="assets/js/sb-admin-2.min.js"></script>
+    <script src="../assets/js/sb-admin-2.min.js"></script>
 
     <!-- Page level plugins -->
-    <script src="assets/vendors/datatables/jquery.dataTables.min.js"></script>
-    <script src="assets/vendors/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="../assets/vendors/datatables/jquery.dataTables.min.js"></script>
+    <script src="../assets/vendors/datatables/dataTables.bootstrap4.min.js"></script>
 
     <!-- Page level custom scripts -->
-    <script src="assets/js/demo/datatables-demo.js"></script>
+    <script src="../assets/js/demo/datatables-demo.js"></script>
 
 </body>
 

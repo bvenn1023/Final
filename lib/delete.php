@@ -162,110 +162,79 @@ session_start();
                 </nav>
                 <!-- End of Topbar -->
 
+                <?php
+                // Database connection
+                $host = 'localhost';
+                $name = 'final';
+                $user = 'root';
+                $pass = '';
+                $connection = new PDO("mysql:dbname=$name;host=$host", $user, $pass);
 
+                // Get the logged-in user's ID
+                $user_id = $_SESSION['ID'];
+                //$user_id = 13;
+                // Retrieve the user's workouts
+                $query = $connection->prepare('SELECT * FROM workouts WHERE user_id = ?');
+                $query->execute([$user_id]);
+                ?>
 
                 <!-- Begin Page Content -->
                 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-                <!-- Display the user's workout information -->
-                <form method="post" action="saveWorkoutData.php" id="workoutForm">
+                <form method="post" action="saveDeletedWorkoutData.php" id="workoutForm">
                     <div id="errorMessages" style="color: red;"></div>
                     <table>
-
+                        <thead>
+                            <tr>
+                                <th>Workout Name</th>
+                                <th>Calories Burned</th>
+                                <th>Calorie Burn Goal</th>
+                                <th>Time Worked Out (Minutes)</th>
+                                <th>Type</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
                         <tbody>
                             <?php
-                            // Database connection
-                            $host = 'localhost';
-                            $name = 'final';
-                            $user = 'root';
-                            $pass = '';
-                            $connection = new PDO("mysql:dbname=$name;host=$host", $user, $pass);
-
-                            $user_id = $_SESSION['ID'];
-                            $query = $connection->prepare('SELECT * FROM workouts WHERE user_id = ?');
-                            $query->execute([$user_id]);
+                            while ($row = $query->fetch()) :
+                                echo '<tr>';
+                                echo '<td>' . $row['name'] . '</td>';
+                                echo '<td>' . $row['cal_burned'] . '</td>';
+                                echo '<td>' . $row['cal_goal'] . '</td>';
+                                echo '<td>' . $row['time_worked'] . '</td>';
+                                echo '<td>' . $row['type'] . '</td>';
+                                echo '<td>';
+                                echo '<button class="delete-btn" data-id="' . $row['ID'] . '">Delete</button>';
+                                echo '</td>';
+                                echo '</tr>';
+                            endwhile;
                             ?>
+                        </tbody>
+                    </table>
+                </form>
 
-                            <!-- Begin Page Content -->
-                            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script>
+                    $('.delete-btn').click(function() {
+                        var id = $(this).data('id');
 
-                            <!-- Display the user's workout information -->
-                            <form method="post" action="saveWorkoutData.php" id="workoutForm">
-                                <div id="errorMessages" style="color: red;"></div>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Workout Name</th>
-                                            <th>Calories Burned</th>
-                                            <th>Calorie Burn Goal</th>
-                                            <th>Time Worked Out (Minutes)</th>
-                                            <th>Type</th>
-                                            <th>date</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                                            echo '<tr>';
-                                            echo '<td><input type="text" name="name[]" value="' . htmlspecialchars($row['name']) . '" maxlength="20"></td>';
-                                            echo '<td><input type="text" name="cal_burned[]" value="' . $row['cal_burned'] . '" pattern="\d{1,4}" title="Enter up to 4 numbers"></td>';
-                                            echo '<td><input type="text" name="cal_goal[]" value="' . $row['cal_goal'] . '" pattern="\d{1,4}" title="Enter up to 4 numbers"></td>';
-                                            echo '<td><input type="text" name="time_worked[]" value="' . $row['time_worked'] . '" pattern="\d{1,2}" title="Enter up to 2 numbers"></td>';
-                                            echo '<td><input type="text" name="type[]" value="' . $row['type'] . '" maxlength="20" pattern="\d{1,20}" title="Enter up to 20 numbers"></td>';
-                                            echo '<td><input type="date" name="workout_date[]" pattern="\d{4}[-/](0[1-9]|1[0-2])[-/](0[1-9]|[12][0-9]|3[01])" title="Enter a date (yyyy-mm-dd or yyyy/mm/dd)" maxlength="10" value="' . htmlspecialchars($row['date']) . '"></td>';
-                                            echo '<input type="hidden" name="ID[]" value="' . $row['ID'] . '">';
-                                            echo '</tr>';
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>
-                                <input type="submit" value="Save" onclick="return validateForm();">
-                            </form>
+                        $.post('saveDeletedWorkoutData.php', {
+                            id: id
+                        }, function() {
+                            location.reload();
+                        });
+                    });
+                </script>
 
-                            <script>
-                                function validateForm() {
-                                    $('#errorMessages').html('');
-                                    $('input').removeClass('invalid');
+                
 
-                                    var isValid = true;
 
-                                    $('input[name^="cal_burned"], input[name^="cal_goal"], input[name^="time_worked"], input[name^="type"], input[name^="workout_date"]').each(function() {
-                                        if (!this.checkValidity()) {
-                                            isValid = false;
-                                            $('#errorMessages').append('<p>' + $(this).attr('title') + '</p>');
-                                            $(this).addClass('invalid');
-                                        }
 
-                                        if ($(this).attr('name') === 'workout_date' && !isValidDate($(this).val())) {
-                                            isValid = false;
-                                            $('#errorMessages').append('<p>Enter a valid date in the format YYYY-MM-DD or YYYY/MM/DD</p>');
-                                            $(this).addClass('invalid');
-                                        }
-                                    });
 
-                                    return isValid;
-                                }
 
-                                function isValidDate(dateString) {
-                                    var dateFormat = /^(19|20)\d\d[-/](0[1-9]|1[0-2])[-/](0[1-9]|[12][0-9]|3[01])$/;
 
-                                    return dateFormat.test(dateString);
-                                }
 
-                                $(document).ready(function() {
-                                    $('#workoutForm').submit(function(event) {
-                                        if (!validateForm()) {
-                                            event.preventDefault();
-                                        }
-                                    });
-                                });
-                            </script>
 
-                            <style>
-                                .invalid {
-                                    border: 2px solid red;
-                                }
-                            </style>
+
 
 </html>
 

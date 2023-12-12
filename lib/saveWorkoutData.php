@@ -177,34 +177,29 @@ session_start();
                         $cal_goal = $_POST['cal_goal'];
                         $time_worked = $_POST['time_worked'];
                         $type = $_POST['type'];
+                        $date = $_POST['workout_date'];
 
-                        // If $workoutID is an array, you might want to loop through the array and update each record
+                        // If $workoutID is an array, loop through the array and update each record
                         if (is_array($workoutID)) {
                             foreach ($workoutID as $key => $id) {
-                                $query = $connection->prepare('UPDATE workouts SET name=?, cal_burned=?, cal_goal=?, time_worked=?, type=? WHERE ID=?');
-                                $query->execute([$name[$key], $cal_burned[$key], $cal_goal[$key], $time_worked[$key], $type[$key], $id]);
+                                $query = $connection->prepare('UPDATE workouts SET name=?, cal_burned=?, cal_goal=?, time_worked=?, type=?, date=? WHERE ID=?');
+                                $query->execute([$name[$key], $cal_burned[$key], $cal_goal[$key], $time_worked[$key], $type[$key], $date[$key], $id]);
                             }
                         } else {
                             // Handle the case when $workoutID is not an array (single record update)
-                            $query = $connection->prepare('UPDATE workouts SET name=?, cal_burned=?, cal_goal=?, time_worked=?, type=? WHERE ID=?');
-                            $query->execute([$name, $cal_burned, $cal_goal, $time_worked, $type, $workoutID]);
+                            $query = $connection->prepare('UPDATE workouts SET name=?, cal_burned=?, cal_goal=?, time_worked=?, type=?, date=? WHERE ID=?');
+                            $query->execute([$name, $cal_burned, $cal_goal, $time_worked, $type, $date, $workoutID]);
                         }
 
-                        // Return a success message
                         echo '<div class="alert alert-success" role="alert">';
                         echo 'Workout updated successfully!';
                         echo '</div>';
                     } catch (PDOException $e) {
-                        // Handle database connection or query errors
                         echo '<div class="alert alert-danger" role="alert">';
                         echo 'Error: ' . $e->getMessage();
                         echo '</div>';
-                    } finally {
-                        // Close the database connection
-                        $connection = null;
                     }
                 } else {
-                    // Handle invalid request method
                     echo '<div class="alert alert-danger" role="alert">';
                     echo 'Invalid request method';
                     echo '</div>';
