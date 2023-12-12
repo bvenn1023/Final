@@ -203,11 +203,11 @@ if (isset($_POST["logout"])) {
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total Calories Burned Today
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Active Minutes Today
                                             </div>
                                             <div class="row no-gutters align-items-center">
                                                 <div class="col-auto">
-                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?php totalTimeSpent("lib/" . $_SESSION['id'] . ".json") ?></div>
+                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?php totalTimeSpent( $_SESSION["ID"]) ?></div>
                                                 </div>
 
                                             </div>
@@ -224,8 +224,8 @@ if (isset($_POST["logout"])) {
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                Total Burn Goal</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php totalCaloriesGoal("lib/" . $_SESSION['id'] . ".json") ?></div>
+                                                Calories Burned Today</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php caloriesToday($_SESSION["ID"]) ?></div>
                                         </div>
                                     </div>
                                 </div>
