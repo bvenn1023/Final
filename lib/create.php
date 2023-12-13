@@ -201,7 +201,7 @@ session_start();
                                 echo '<td><input type="text" name="cal_burned[]" pattern="\d{1,4}" title="Enter up to 4 numbers"></td>';
                                 echo '<td><input type="text" name="cal_goal[]" pattern="\d{1,4}" title="Enter up to 4 numbers"></td>';
                                 echo '<td><input type="text" name="time_worked[]" pattern="\d{1,3}" title="Enter up to 3 numbers"></td>';
-                                echo '<td><select name="type[]">';
+                                 echo '<td><select name="type[]">';
 								foreach ($types as $type) {
 									echo '<option value="' . htmlspecialchars($type) . '">' . htmlspecialchars($type) . '</option>';
 								}
