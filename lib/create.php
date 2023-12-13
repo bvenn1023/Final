@@ -195,7 +195,7 @@ session_start();
                             <?php
 							$types=array('Cardiovascular','Strength Training','Flexibility Training','Balance and Stability','Bodyweight Exercises','Custom/Other');
                             $row = $query->fetch(PDO::FETCH_ASSOC);
-                            if ($row) {
+                            
                                 echo '<tr>';
                                 echo '<td><input type="text" name="name[]" maxlength="20"></td>';
                                 echo '<td><input type="text" name="cal_burned[]" pattern="\d{1,4}" title="Enter up to 4 numbers"></td>';
@@ -208,9 +208,9 @@ session_start();
                                  echo '<td><input type="text" name="workout_date[]" value="' . date('Y-m-d') . '" pattern="\d{4}[-/](0[1-9]|1[0-2])[-/](0[1-9]|[12][0-9]|3[01])" title="Enter a date (yyyy-mm-dd or yyyy/mm/dd)" maxlength="10"></td>';
                                 echo '<input type="hidden" name="ID[]" value="' . $_SESSION['ID'] . '">';
                                 echo '</tr>';
-                            } else {
-                                echo 'No workouts found';
-                            }
+                            
+                                
+                            
                             ?>
                         </tbody>
                     </table>
