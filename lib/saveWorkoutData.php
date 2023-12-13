@@ -61,7 +61,7 @@ session_start();
             <!-- Nav Item - Pages Collapse Menu -->
             <?php //only executes if user is admin, links to admin features
 
-            if ($_SESSION['admin'] == true) { ?>
+            if ($_SESSION["role"] == 1) { ?>
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
                         <i class="fas fa-fw fa-folder"></i>
@@ -151,9 +151,7 @@ session_start();
 
 
                         </li>
-
-
-
+\
                     </ul>
 
                 </nav>
