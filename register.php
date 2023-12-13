@@ -25,7 +25,8 @@ function createUser(){
 			];
 			$connection=new PDO('mysql:host='.$host.';dbname='.$name.';charset=utf8mb4',$user,$pass,$opt);
 			$query=$connection->prepare("INSERT INTO users (email, password, firstname, lastname, height,weight,age, role) VALUES (?, ?, ?, ?, ?,?,?,?)");
-		    $query->execute([$_POST["email"], $_POST["password"], $_POST["firstname"], $_POST["lastname"],$_POST["height"],$_POST["weight"],$_POST["age"], 0]);
+			$hashedpass=password_hash($_POST["password"],PASSWORD_DEFAULT);
+		    $query->execute([$_POST["email"], $hashedpass, $_POST["firstname"], $_POST["lastname"],$_POST["height"],$_POST["weight"],$_POST["age"], 0]);
 			
   
             header("Location: login.php");
@@ -54,7 +55,7 @@ if (
         echo("Passwords don't match");
     } else {
         $_POST["age"] = $_POST["birthdate"] ;
-	 
+		
         createUser();
     }
 } 
