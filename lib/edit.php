@@ -64,7 +64,7 @@ session_start();
             <!-- Nav Item - Pages Collapse Menu -->
             <?php //only executes if user is admin, links to admin features
 
-            if ($_SESSION['admin'] == true) { ?>
+            if ($_SESSION["role"] == 1) { ?>
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
                         <i class="fas fa-fw fa-folder"></i>
@@ -211,7 +211,7 @@ session_start();
                                             echo '<td><input type="text" name="cal_burned[]" value="' . $row['cal_burned'] . '" pattern="\d{1,4}" title="Enter up to 4 numbers"></td>';
                                             echo '<td><input type="text" name="cal_goal[]" value="' . $row['cal_goal'] . '" pattern="\d{1,4}" title="Enter up to 4 numbers"></td>';
                                             echo '<td><input type="text" name="time_worked[]" value="' . $row['time_worked'] . '" pattern="\d{1,2}" title="Enter up to 2 numbers"></td>';
-                                            echo '<td><input type="text" name="type[]" value="' . $row['type'] . '" maxlength="20" pattern="\d{1,20}" title="Enter up to 20 numbers"></td>';
+                                            echo '<td><input type="text" name="type[]" value="' . $row['type'] . '" maxlength="20" title="Enter up to 20 characters"></td>';
                                             echo '<td><input type="date" name="workout_date[]" pattern="\d{4}[-/](0[1-9]|1[0-2])[-/](0[1-9]|[12][0-9]|3[01])" title="Enter a date (yyyy-mm-dd or yyyy/mm/dd)" maxlength="10" value="' . htmlspecialchars($row['date']) . '"></td>';
                                             echo '<input type="hidden" name="ID[]" value="' . $row['ID'] . '">';
                                             echo '</tr>';
