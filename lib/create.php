@@ -64,7 +64,7 @@ session_start();
             <!-- Nav Item - Pages Collapse Menu -->
             <?php //only executes if user is admin, links to admin features
 
-            if ($_SESSION['admin'] == true) { ?>
+            if ($_SESSION['role'] == 1) { ?>
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
                         <i class="fas fa-fw fa-folder"></i>
@@ -193,6 +193,7 @@ session_start();
                         </thead>
                         <tbody>
                             <?php
+							$types=array('Cardiovascular','Strength Training','Flexibility Training','Balance and Stability','Bodyweight Exercises','Custom/Other');
                             $row = $query->fetch(PDO::FETCH_ASSOC);
                             if ($row) {
                                 echo '<tr>';
@@ -200,8 +201,11 @@ session_start();
                                 echo '<td><input type="text" name="cal_burned[]" pattern="\d{1,4}" title="Enter up to 4 numbers"></td>';
                                 echo '<td><input type="text" name="cal_goal[]" pattern="\d{1,4}" title="Enter up to 4 numbers"></td>';
                                 echo '<td><input type="text" name="time_worked[]" pattern="\d{1,2}" title="Enter up to 2 numbers"></td>';
-                                echo '<td><input type="text" name="type[]" maxlength="20" pattern="\d{1,20}" title="Enter up to 20 numbers"></td>';
-                                echo '<td><input type="text" name="workout_date[]" pattern="\d{4}[-/](0[1-9]|1[0-2])[-/](0[1-9]|[12][0-9]|3[01])" title="Enter a date (yyyy-mm-dd or yyyy/mm/dd)" maxlength="10"></td>';
+                                echo '<td><select name="type[]">';
+								foreach ($types as $type) {
+									echo '<option value="' . htmlspecialchars($type) . '">' . htmlspecialchars($type) . '</option>';
+								}
+                                 echo '<td><input type="text" name="workout_date[]" value="' . date('Y-m-d') . '" pattern="\d{4}[-/](0[1-9]|1[0-2])[-/](0[1-9]|[12][0-9]|3[01])" title="Enter a date (yyyy-mm-dd or yyyy/mm/dd)" maxlength="10"></td>';
                                 echo '<input type="hidden" name="ID[]" value="' . $_SESSION['ID'] . '">';
                                 echo '</tr>';
                             } else {

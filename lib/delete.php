@@ -170,10 +170,7 @@ session_start();
                 $pass = '';
                 $connection = new PDO("mysql:dbname=$name;host=$host", $user, $pass);
 
-                // Get the logged-in user's ID
                 $user_id = $_SESSION['ID'];
-                //$user_id = 13;
-                // Retrieve the user's workouts
                 $query = $connection->prepare('SELECT * FROM workouts WHERE user_id = ?');
                 $query->execute([$user_id]);
                 ?>
@@ -224,17 +221,6 @@ session_start();
                         });
                     });
                 </script>
-
-                
-
-
-
-
-
-
-
-
-
 
 </html>
 
