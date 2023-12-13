@@ -280,7 +280,7 @@ if (isset ($_POST["logout"])){
 </body>
 
 </html>
-<?php}else{die('not an admin')}?>
+<?php}else{header("../../redirect.php")}?>
 
 
 

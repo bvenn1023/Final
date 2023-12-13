@@ -86,6 +86,8 @@ function printAll(){
 			echo $item['lastname'];
 			echo '</td><td>';
 			echo $item['role'];
+			echo '</td><td>';
+			echo totalWorkouts($_GET['getid']);
 		echo '</tr>';
 		
 		
@@ -176,6 +178,27 @@ function editData($id,$email,$password,$role){
 	
 	
 	
+}
+
+function totalWorkouts($userID) {
+$host='localhost';
+	$name='final';
+	$user='root';
+	$pass='';
+
+	//Specify options
+	$opt = [
+		PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+		PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+		PDO::ATTR_EMULATE_PREPARES => false
+	];
+	$connection=new PDO('mysql:host='.$host.';dbname='.$name.';charset=utf8mb4',$user,$pass,$opt);
+	$query=$connection->prepare('SELECT * FROM workouts WHERE user_ID=?');
+	$query->execute([$userID]);
+	$counter=0;
+	while($row=$query->fetch()){
+	$counter+=1;}
+	echo $counter;
 }
 
 

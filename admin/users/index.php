@@ -205,8 +205,6 @@ if (isset ($_POST["logout"])){
                                            
                                             
                                         
-                                    <tbody>
-                                        <a href="detail.php">Edit Workout</a>
                                     </tbody>
                                 </table>
                             </div>
@@ -279,7 +277,7 @@ if (isset ($_POST["logout"])){
 </body>
 
 </html>
-<?php}else{die('not an admin')}?>
+<?php}else{header("Location: ../../redirect.php"}?>
 
 
 
