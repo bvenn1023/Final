@@ -92,7 +92,7 @@ if (isset ($_POST["logout"])){
 
             <!-- Nav Item - Tables -->
             <li class="nav-item active">
-                <a class="nav-link" href="tables.php">
+                <a class="nav-link" href="../../tables.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Workouts</span></a>
             </li>
