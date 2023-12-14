@@ -301,7 +301,7 @@ if ($_SESSION['role']==1){?>
 </body>
 
 </html>
-<?php}else{die('not an admin')}?>
+<?php}else{header("Location: ../../redirect.php")}?>
 
 
 

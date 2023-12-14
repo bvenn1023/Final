@@ -205,13 +205,19 @@ session_start();
                                     </thead>
                                     <tbody>
                                         <?php
+										$types=array('Cardiovascular','Strength Training','Flexibility Training','Balance and Stability','Bodyweight Exercises','Custom/Other');
                                         while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
                                             echo '<tr>';
                                             echo '<td><input type="text" name="name[]" value="' . htmlspecialchars($row['name']) . '" maxlength="20"></td>';
                                             echo '<td><input type="text" name="cal_burned[]" value="' . $row['cal_burned'] . '" pattern="\d{1,4}" title="Enter up to 4 numbers"></td>';
                                             echo '<td><input type="text" name="cal_goal[]" value="' . $row['cal_goal'] . '" pattern="\d{1,4}" title="Enter up to 4 numbers"></td>';
-                                            echo '<td><input type="text" name="time_worked[]" value="' . $row['time_worked'] . '" pattern="\d{1,2}" title="Enter up to 2 numbers"></td>';
-                                            echo '<td><input type="text" name="type[]" value="' . $row['type'] . '" maxlength="20" title="Enter up to 20 characters"></td>';
+                                            echo '<td><input type="text" name="time_worked[]" value="' . $row['time_worked'] . '" pattern="\d{1,3}" title="Enter up to 3 numbers"></td>';
+                                            echo '<td><select name="type[]">';
+											foreach ($types as $type) {
+												$selected = ($type == $row['type']) ? 'selected' : '';
+												echo '<option value="' . htmlspecialchars($type) . '" ' . $selected . '>' . htmlspecialchars($type) . '</option>';
+											}
+											echo '</select></td>';
                                             echo '<td><input type="date" name="workout_date[]" pattern="\d{4}[-/](0[1-9]|1[0-2])[-/](0[1-9]|[12][0-9]|3[01])" title="Enter a date (yyyy-mm-dd or yyyy/mm/dd)" maxlength="10" value="' . htmlspecialchars($row['date']) . '"></td>';
                                             echo '<input type="hidden" name="ID[]" value="' . $row['ID'] . '">';
                                             echo '</tr>';

@@ -1,82 +1,90 @@
 <?php
 session_start();
 
-function countArraysInJsonFile($jsonFilePath) {
-    // Read the JSON file into a string
-	if (file_exists($jsonFilePath)){
-		$jsonString = file_get_contents($jsonFilePath);
-		
-		// Parse the JSON data
-		$jsonData = json_decode($jsonString, true); 
+function totalWorkouts($userID) {
+$host='localhost';
+	$name='final';
+	$user='root';
+	$pass='';
 
-		if ($jsonData === null) {
-			// JSON parsing failed
-			throw new Exception("Failed to parse JSON data.");
-		}
-		$arrayCount=0;
-		foreach($jsonData as $value){
-			$arrayCount+=1;
-			
-		}
-
-		echo $arrayCount;
-	}else{
-		echo "0";
-	}
+	//Specify options
+	$opt = [
+		PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+		PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+		PDO::ATTR_EMULATE_PREPARES => false
+	];
+	$connection=new PDO('mysql:host='.$host.';dbname='.$name.';charset=utf8mb4',$user,$pass,$opt);
+	$query=$connection->prepare('SELECT * FROM workouts WHERE user_ID=?');
+	$query->execute([$userID]);
+	$counter=0;
+	while($row=$query->fetch()){
+	$counter+=1;}
+	echo $counter;
 }
-function totalCalories($jsonFilePath){
-	if (file_exists($jsonFilePath)){
-		$jsonString=file_get_contents($jsonFilePath);
-		$jsonData=json_decode($jsonString, true);
-		//print_r($jsonData);
-		$total=0;
-		foreach ($jsonData as $value){
-			//print_r($value);
-			
-			$total=$total+intval($value["CaloriesBurned"]);
-			
-		
-		}
-		echo $total;
-		}else{
-		echo "0";
-		}			
-}
+function workoutsToday($userID) {
+	$date=date("Y-m-d");
+	$host='localhost';
+	$name='final';
+	$user='root';
+	$pass='';
 
-function totalTimeSpent($jsonFilePath){
-	if (file_exists($jsonFilePath)){
-		$jsonString=file_get_contents($jsonFilePath);
-		$jsonData=json_decode($jsonString, true);
-		//print_r($jsonData);
-		$total=0;
-		foreach ($jsonData as $value){
-			//print_r($value);
-			
-			$total=$total+intval($value["TimeWorkedOut"]);
-			
-		
-		}
-		echo $total;
-	}else{
-		echo "0";
-	}
+	//Specify options
+	$opt = [
+		PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+		PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+		PDO::ATTR_EMULATE_PREPARES => false
+	];
+	$connection=new PDO('mysql:host='.$host.';dbname='.$name.';charset=utf8mb4',$user,$pass,$opt);
+	$query=$connection->prepare('SELECT * FROM workouts WHERE user_ID=? AND date=?');
+	$query->execute([$userID,$date]);
+	$counter=0;
+	while($row=$query->fetch()){
+	$counter+=1;}
+	echo $counter;
 }
 
-function totalCaloriesGoal($jsonFilePath){
-	if (file_exists($jsonFilePath)){
-		$jsonString=file_get_contents($jsonFilePath);
-		$jsonData=json_decode($jsonString, true);
-		//print_r($jsonData);
-		$total=0;
-		foreach ($jsonData as $value){
-			//print_r($value);
-			
-			$total=$total+intval($value["CalorieBurnGoal"]);
-			
-		
-		}
-		echo $total;
-	}else{
-		echo "0";
-	}		
+
+function totalTimeSpent($userID){
+	$date=date("Y-m-d");
+	$host='localhost';
+	$name='final';
+	$user='root';
+	$pass='';
+
+	//Specify options
+	$opt = [
+		PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+		PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+		PDO::ATTR_EMULATE_PREPARES => false
+	];
+	$connection=new PDO('mysql:host='.$host.';dbname='.$name.';charset=utf8mb4',$user,$pass,$opt);
+	$query=$connection->prepare('SELECT time_worked FROM workouts WHERE user_ID=? AND date=?');
+	$query->execute([$userID,$date]);
+	$minutes=0;
+	while($row=$query->fetch()){
+	$minutes+=$row["time_worked"];}
+	echo $minutes;
+}
+
+function caloriesToday($userID){
+	$date=date("Y-m-d");
+	$host='localhost';
+	$name='final';
+	$user='root';
+	$pass='';
+
+	//Specify options
+	$opt = [
+		PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+		PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+		PDO::ATTR_EMULATE_PREPARES => false
+	];
+	$connection=new PDO('mysql:host='.$host.';dbname='.$name.';charset=utf8mb4',$user,$pass,$opt);
+	$query=$connection->prepare('SELECT cal_burned FROM workouts WHERE user_ID=? AND date=?');
+	$query->execute([$userID,$date]);
+	$calories=0;
+	while($row=$query->fetch()){
+	$calories+=$row["cal_burned"];}
+	echo $calories;
+	
 }

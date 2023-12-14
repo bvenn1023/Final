@@ -25,12 +25,15 @@ function signin($email,$password){
 	$query->execute([$email]);
 	if($query->rowCount()==0) return false;
 	$result=$query->fetch();
-	if($result['password']!=$password) return false;
-	$_SESSION['ID']=$result['ID'];
-	$_SESSION['role']=$result['role'];
-	$_SESSION['firstname']=$result['firstname'];
-	$_SESSION['lastname']=$result['lastname'];
-	return true;
+	if (!password_verify($password, $result['password'])) {
+		return false;
+	}elseif(password_verify($password, $result['password'])){
+		$_SESSION['ID']=$result['ID'];
+		$_SESSION['role']=$result['role'];
+		$_SESSION['firstname']=$result['firstname'];
+		$_SESSION['lastname']=$result['lastname'];
+		return true;
+	}
 }
 
 
@@ -39,7 +42,7 @@ function signin($email,$password){
 
 
 
-if(isset($_SESSION['email'])) die('You are already sign in, no need to sign in.');
+if(isset($_SESSION['email'])) header("Location: index.php");
 $showForm=true;
 if(count($_POST)>0){
 	if(isset($_POST['email'][0]) && isset($_POST['password'][0])){
