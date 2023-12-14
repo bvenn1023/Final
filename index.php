@@ -56,7 +56,7 @@ if (isset($_POST["logout"])) {
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="index.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -73,7 +73,7 @@ if (isset($_POST["logout"])) {
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
                     <i class="fas fa-fw fa-folder"></i>
-                    <span>Pages</span>
+                    <span>Admin</span>
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
@@ -156,7 +156,7 @@ if (isset($_POST["logout"])) {
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-                        <a href="tables.php" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> View Workouts</a>
+                        <a href="tables.php" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">View Workouts</a>
                     </div>
 
                     <!-- Content Row -->
@@ -170,7 +170,9 @@ if (isset($_POST["logout"])) {
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                 Total Workouts</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php countArraysInJsonFile("lib/" . $_SESSION['id'] . ".json") ?></div>
+
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php totalWorkouts($_SESSION["ID"]);?></div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -184,8 +186,11 @@ if (isset($_POST["logout"])) {
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Total Calories Burned</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php totalCalories("lib/" . $_SESSION['id'] . ".json") ?></div>
+
+                                                Workouts Completed Today</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php workoutsToday($_SESSION["ID"]);?></div>
+
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -198,11 +203,11 @@ if (isset($_POST["logout"])) {
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total Minutes
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Active Minutes Today
                                             </div>
                                             <div class="row no-gutters align-items-center">
                                                 <div class="col-auto">
-                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?php totalTimeSpent("lib/" . $_SESSION['id'] . ".json") ?></div>
+                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?php totalTimeSpent( $_SESSION["ID"]) ?></div>
                                                 </div>
 
                                             </div>
@@ -219,8 +224,8 @@ if (isset($_POST["logout"])) {
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                Total Burn Goal</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php totalCaloriesGoal("lib/" . $_SESSION['id'] . ".json") ?></div>
+                                                Calories Burned Today</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php caloriesToday($_SESSION["ID"]) ?></div>
                                         </div>
                                     </div>
                                 </div>
@@ -358,7 +363,7 @@ if (isset($_POST["logout"])) {
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2021</span>
+                        <span>Copyright &copy; Gymify 2023</span>
                     </div>
                 </div>
             </footer>
@@ -375,24 +380,7 @@ if (isset($_POST["logout"])) {
         <i class="fas fa-angle-up"></i>
     </a>
 
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.php">Logout</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
     <!-- Bootstrap core JavaScript-->
     <script src="assets/vendors/jquery/jquery.min.js"></script>
