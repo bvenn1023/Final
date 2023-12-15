@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <?php 
@@ -252,4 +253,3 @@ if (isset ($_POST["logout"])){
 
 </body>
 
-</html>

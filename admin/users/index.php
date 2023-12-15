@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <?php 
@@ -283,4 +284,3 @@ if (isset ($_POST["logout"])){
 
 
 
-<a href="../../index.php">back to user view</a>
