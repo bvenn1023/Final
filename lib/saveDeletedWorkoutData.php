@@ -49,7 +49,7 @@ session_start();
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="../index.php">
+                <a class="nav-link" href="../dash.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -157,7 +157,7 @@ session_start();
                 </nav>
 
                 <?php
-                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     // Database connection
                     $host = 'localhost';
                     $name = 'final';
@@ -168,8 +168,8 @@ session_start();
                         $pdo = new PDO("mysql:host=$host;dbname=$name", $user, $pass);
                         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-                        $id = $_POST['id'];
-
+                        $id = $_GET["getid"];
+						
                         $stmt = $pdo->prepare("DELETE FROM workouts WHERE ID = ?");
                         $stmt->execute([$id]);
 
