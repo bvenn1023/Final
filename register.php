@@ -34,7 +34,33 @@ function createUser(){
         }
     }
 }
+//checks if email has already been used
+function checkStatus($email){
+	
+	 $host='localhost';
+			$name='final';
+			$user='root';
+			$pass='';
+
+
+			//Specify options
+			$opt = [
+				PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+				PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+				PDO::ATTR_EMULATE_PREPARES => false
+			];
+			$connection=new PDO('mysql:host='.$host.';dbname='.$name.';charset=utf8mb4',$user,$pass,$opt);
+			$query=$connection->prepare("SELECT * FROM users WHERE email=?") ;
+			$query->execute([$email]);
+			if($query->rowCount()>0){
+				return true;
+				
+			}
+	
+	
+}
 $currentYear = date("Y");
+
 //input validation
 if (
     isset($_POST["firstname"]) &&
@@ -46,19 +72,21 @@ if (
     isset($_POST["birthdate"]) &&
     isset($_POST["password2"])
 ) {
-    if (!is_string($_POST["firstname"]) || !is_string($_POST["lastname"])) {
-        echo ("Please enter your name");
-    } elseif (!is_int((int)$_POST["height"]) || !is_int((int)$_POST["weight"])) {
-        echo ("Please enter height and weight as whole numbers");
-    } 
-     elseif ($_POST["password"] != $_POST["password2"]) {
-        echo("Passwords don't match");
-    } else {
-        $_POST["age"] = $_POST["birthdate"] ;
-		
-        createUser();
-    }
-} 
+		if (checkStatus($_POST["email"])==false){
+			if (!is_string($_POST["firstname"]) || !is_string($_POST["lastname"])) {
+				echo ("Please enter your name");
+			} elseif (!is_int((int)$_POST["height"]) || !is_int((int)$_POST["weight"])) {
+				echo ("Please enter height and weight as whole numbers");
+			} 
+			 elseif ($_POST["password"] != $_POST["password2"]) {
+				echo("Passwords don't match");
+			} else {
+				$_POST["age"] = $_POST["birthdate"] ;
+				
+				createUser();
+			}
+	} else{echo("You already have an account! please login below");}
+}
 
 
 
@@ -105,16 +133,16 @@ if (
                             <form class="user" method="POST" action="register.php">
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="exampleFirstName" name="firstname"
+                                        <input type="text" class="form-control form-control-user" id="exampleFirstName" name="firstname" maxlength="20"
                                             placeholder="First Name">
                                     </div>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control form-control-user" id="exampleLastName" name="lastname"
+                                        <input type="text" class="form-control form-control-user" id="exampleLastName" name="lastname" maxlength="20"
                                             placeholder="Last Name">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="email" class="form-control form-control-user" id="exampleInputEmail" name="email"
+                                    <input type="email" class="form-control form-control-user" id="exampleInputEmail" name="email" maxlength="48"
                                         placeholder="Email Address">
                                 </div>
                                 <div class="form-group row">
@@ -129,11 +157,11 @@ if (
                                 </div>
 								 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="number" class="form-control form-control-user" name="height"
+                                        <input type="number" class="form-control form-control-user" name="height" maxlength="3"
                                             id="exampleInputPassword" placeholder="height (inches)">
                                     </div>
                                     <div class="col-sm-6">
-                                        <input type="number" class="form-control form-control-user" name="weight"
+                                        <input type="number" class="form-control form-control-user" name="weight" maxlength="3"
                                             id="exampleRepeatPassword" placeholder="weight (lbs)">
                                     </div>
                                 </div>

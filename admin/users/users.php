@@ -121,7 +121,7 @@ function deleteUser(){
 
 function getData($item){
 
-$host='localhost';
+    $host='localhost';
 	$name='final';
 	$user='root';
 	$pass='';
