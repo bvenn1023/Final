@@ -47,7 +47,7 @@ function signin($email,$password){
 
 
 
-if(isset($_SESSION['email'])) header("Location: index.php");
+if(isset($_SESSION['email'])) header("Location: dash.php");
 $showForm=true;
 if(count($_POST)>0){
 	if(isset($_POST['email'][0]) && isset($_POST['password'][0])){
@@ -72,7 +72,7 @@ if(count($_POST)>0){
 					header("Location: admin/index.php");
 					
 				}else{
-					header("Location: index.php");
+					header("Location: dash.php");
 			}
 		 }
 		}
@@ -141,8 +141,11 @@ if($showForm){
 									</form>
 
                                     <hr>
+									<div class="text-center">
+                                        <a class="small" href="index.php">Return Home</a>
+                                    </div>
                                     <div class="text-center">
-                                        <a class="small" href="forgot-password.php">Forgot Password?</a>
+                                        <a class="small" href="forgot-password.html">Forgot Password?</a>
                                     </div>
                                     <div class="text-center">
                                         <a class="small" href="register.php">Create an Account!</a>

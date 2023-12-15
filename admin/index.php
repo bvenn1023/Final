@@ -81,8 +81,8 @@ if (isset ($_POST["logout"])){
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Admin Features:</h6>
-                        <a class="collapse-item" href="admin/users/index.php">Edit Users</a>
-                        <a class="collapse-item" href="admin/pages/index.php">Edit Pages</a>
+                        <a class="collapse-item" href="users/index.php">Edit Users</a>
+                        <a class="collapse-item" href="pages/index.php">Edit Pages</a>
                        
                     </div>
                 </div>
@@ -214,7 +214,7 @@ if (isset ($_POST["logout"])){
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2020</span>
+                        <span>Copyright &copy; Gymify 2020</span>
                     </div>
                 </div>
             </footer>

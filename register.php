@@ -140,10 +140,11 @@ if (
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input type="text" class="form-control form-control-user" id="exampleFirstName" name="firstname" maxlength="20"
-                                            placeholder="First Name">
+                                            pattern="[A-Za-z]{1,20}" placeholder="First Name">
                                     </div>
                                     <div class="col-sm-6">
                                         <input type="text" class="form-control form-control-user" id="exampleLastName" name="lastname" maxlength="20"
+											pattern="[A-Za-z]{1,20}"
                                             placeholder="Last Name">
                                     </div>
                                 </div>
@@ -163,11 +164,11 @@ if (
                                 </div>
 								 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="number" class="form-control form-control-user" name="height" maxlength="3"
+                                        <input type="number" class="form-control form-control-user" name="height" max="96"
                                             id="exampleInputPassword" placeholder="height (inches)">
                                     </div>
                                     <div class="col-sm-6">
-                                        <input type="number" class="form-control form-control-user" name="weight" maxlength="3"
+                                        <input type="number" class="form-control form-control-user" name="weight" max="999"
                                             id="exampleRepeatPassword" placeholder="weight (lbs)">
                                     </div>
                                 </div>
