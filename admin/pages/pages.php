@@ -60,9 +60,7 @@ function editText($path){
     } else {
         echo "File '$filename' does not exist.";
     }//else randomly executes sometimes?
-} else {
-    echo "Please provide both a filename and new content.";
-}
+} 
 	
 	
 }
