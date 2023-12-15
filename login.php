@@ -28,6 +28,7 @@ function signin($email,$password){
 	if (!password_verify($password, $result['password'])) {
 		return false;
 	}elseif(password_verify($password, $result['password'])){
+		//sets relevent values into a session
 		$_SESSION['ID']=$result['ID'];
 		$_SESSION['role']=$result['role'];
 		$_SESSION['firstname']=$result['firstname'];
@@ -46,11 +47,10 @@ if(isset($_SESSION['email'])) header("Location: index.php");
 $showForm=true;
 if(count($_POST)>0){
 	if(isset($_POST['email'][0]) && isset($_POST['password'][0])){
-		// process information
+		
 		
 			
-		//change age to DOB
-		//change workouts
+		
 			
 			if(signin($_POST['email'],$_POST['password'])==true){
 				// Sign the user in
@@ -64,7 +64,7 @@ if(count($_POST)>0){
 				//2. Show a welcome message
 				echo 'Welcome to our website';$showForm=false;
 				if($_SESSION['role']==1){
-					print_r($_SESSION['role']);
+					//sends user directly to admin if role ==1
 					header("Location: admin/index.php");
 					
 				}else{
@@ -75,9 +75,7 @@ if(count($_POST)>0){
 		
 		// The credentials are wrong
 		if($showForm) {echo 'Your credentials are wrong';}
-					//print_r($line);
-					//echo $_POST['email'];
-					//echo $_POST['password'];
+					
 		}else echo 'Email and password are missing';
 
 //if user isAdmin() header admin folder
