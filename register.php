@@ -10,34 +10,37 @@ function createUser(){
         if (empty($name) || empty($password)) {
             echo '<p>Please fill in all fields.</p>';
         } else {
+			try{
+				$host='localhost';
+				$name='final';
+				$user='root';
+				$pass='';
 
-            $host='localhost';
-			$name='final';
-			$user='root';
-			$pass='';
 
-
-			//Specify options
-			$opt = [
-				PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-				PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-				PDO::ATTR_EMULATE_PREPARES => false
-			];
-			$connection=new PDO('mysql:host='.$host.';dbname='.$name.';charset=utf8mb4',$user,$pass,$opt);
-			$query=$connection->prepare("INSERT INTO users (email, password, firstname, lastname, height,weight,age, role) VALUES (?, ?, ?, ?, ?,?,?,?)");
-			$hashedpass=password_hash($_POST["password"],PASSWORD_DEFAULT);
-		    $query->execute([$_POST["email"], $hashedpass, $_POST["firstname"], $_POST["lastname"],$_POST["height"],$_POST["weight"],$_POST["age"], 0]);
-			
-  
-            header("Location: login.php");
-            exit;
+				//Specify options
+				$opt = [
+					PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+					PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+					PDO::ATTR_EMULATE_PREPARES => false
+				];
+				$connection=new PDO('mysql:host='.$host.';dbname='.$name.';charset=utf8mb4',$user,$pass,$opt);
+				$query=$connection->prepare("INSERT INTO users (email, password, firstname, lastname, height,weight,age, role) VALUES (?, ?, ?, ?, ?,?,?,?)");
+				$hashedpass=password_hash($_POST["password"],PASSWORD_DEFAULT);
+				$query->execute([$_POST["email"], $hashedpass, $_POST["firstname"], $_POST["lastname"],$_POST["height"],$_POST["weight"],$_POST["age"], 0]);
+				
+	  
+				header("Location: login.php");
+				exit;
+			}catch (PDOException $e) {
+			echo "Error: please contact admin and try again later " ;
+			}
         }
     }
 }
 //checks if email has already been used
 function checkStatus($email){
-	
-	 $host='localhost';
+	try{
+			$host='localhost';
 			$name='final';
 			$user='root';
 			$pass='';
@@ -56,6 +59,9 @@ function checkStatus($email){
 				return true;
 				
 			}
+	}catch (PDOException $e) {
+    echo "Error: please contact admin and try again later " ;
+	}
 	
 	
 }

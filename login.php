@@ -9,31 +9,35 @@ session_start();
 //Establish a connection to the db
 
 function signin($email,$password){
-	$host='localhost';
-	$name='final';
-	$user='root';
-	$pass='';
+	try{
+		$host='localhost';
+		$name='final';
+		$user='root';
+		$pass='';
 
-	//Specify options
-	$opt = [
-		PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-		PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-		PDO::ATTR_EMULATE_PREPARES => false
-	];
-	$connection=new PDO('mysql:host='.$host.';dbname='.$name.';charset=utf8mb4',$user,$pass,$opt);
-	$query=$connection->prepare('SELECT * FROM users WHERE email=?');
-	$query->execute([$email]);
-	if($query->rowCount()==0) return false;
-	$result=$query->fetch();
-	if (!password_verify($password, $result['password'])) {
-		return false;
-	}elseif(password_verify($password, $result['password'])){
-		//sets relevent values into a session
-		$_SESSION['ID']=$result['ID'];
-		$_SESSION['role']=$result['role'];
-		$_SESSION['firstname']=$result['firstname'];
-		$_SESSION['lastname']=$result['lastname'];
-		return true;
+		//Specify options
+		$opt = [
+			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+			PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+			PDO::ATTR_EMULATE_PREPARES => false
+		];
+		$connection=new PDO('mysql:host='.$host.';dbname='.$name.';charset=utf8mb4',$user,$pass,$opt);
+		$query=$connection->prepare('SELECT * FROM users WHERE email=?');
+		$query->execute([$email]);
+		if($query->rowCount()==0) return false;
+		$result=$query->fetch();
+		if (!password_verify($password, $result['password'])) {
+			return false;
+		}elseif(password_verify($password, $result['password'])){
+			//sets relevent values into a session
+			$_SESSION['ID']=$result['ID'];
+			$_SESSION['role']=$result['role'];
+			$_SESSION['firstname']=$result['firstname'];
+			$_SESSION['lastname']=$result['lastname'];
+			return true;
+		}
+	}catch (PDOException $e) {
+    echo "Error: please contact admin and try again later " ;
 	}
 }
 
