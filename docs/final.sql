@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 13, 2023 at 09:52 PM
+-- Generation Time: Dec 16, 2023 at 12:40 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -46,7 +46,8 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`ID`, `firstname`, `lastname`, `email`, `password`, `role`, `height`, `weight`, `age`) VALUES
 (20, 'jet', 'black', 'jet@racing.com', '$2y$10$9C5IFQv384rOV.tUyBg.kuIN9ij8ySV73VwBSMx.nGDRudoZZr2me', 0, 36, 70, '2012-06-16'),
 (21, 'will', 'cuth', 'will@nku.edu', '$2y$10$XlIjXiY3Hvv0NSsYJ8wRRuBFGY5AbPo.QdxoUZVaq53Ch9TZEiCI.', 1, 74, 230, '2003-07-29'),
-(22, 'john', 'lennon', 'john@beatles.com', '$2y$10$KgiMuyKR6aXsw6asL2NyjuG2VjgMmmDQyVxDDXu.Jl09DdVjExddm', 0, 68, 140, '1945-05-21');
+(22, 'john', 'lennon', 'john@beatles.com', '$2y$10$KgiMuyKR6aXsw6asL2NyjuG2VjgMmmDQyVxDDXu.Jl09DdVjExddm', 0, 68, 140, '1945-05-21'),
+(23, 'paul', 'mccartney', 'paul@beatles.com', '$2y$10$Yl9i7rEtAS8wZOTfMSyWAunYJNcUnrNzSvnoRxi3Ujglc.MIweOWS', 0, 60, 140, '1942-12-12');
 
 -- --------------------------------------------------------
 
@@ -70,7 +71,10 @@ CREATE TABLE `workouts` (
 --
 
 INSERT INTO `workouts` (`ID`, `user_ID`, `name`, `cal_burned`, `cal_goal`, `time_worked`, `date`, `type`) VALUES
-(7, 21, 'swimming', 300, 300, 90, '2023-12-13', 'Cardiovascular');
+(7, 21, 'swimming', 300, 300, 90, '2023-12-13', 'Cardiovascular'),
+(8, 22, 'running', 300, 200, 60, '2023-12-16', 'Cardiovascular'),
+(9, 22, 'bench press', 500, 350, 120, '2023-12-16', 'Strength Training'),
+(10, 22, 'goat yoga', 100, 100, 60, '2023-12-14', 'Flexibility Training');
 
 --
 -- Indexes for dumped tables
@@ -97,13 +101,13 @@ ALTER TABLE `workouts`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `workouts`
 --
 ALTER TABLE `workouts`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables
